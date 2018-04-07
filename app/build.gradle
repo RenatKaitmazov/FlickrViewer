@@ -26,10 +26,16 @@ android {
 ext {
     supportLibraryVersion = '27.1.0'
     constraintLayoutVersion = '1.0.2'
+    daggerVersion = '2.14.1'
+    timberVersion = '4.7.0'
+    leakCanaryVersion = '1.5.4'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Project dependencies
+    implementation project(':data')
 
     // Testing
     testImplementation 'junit:junit:4.12'
@@ -37,11 +43,23 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     // Kotlin
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
 
     // Android support library
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 
     // Constraint layout
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+
+    // Dependency injection
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // Logging
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    // Memory leaks detector
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 }

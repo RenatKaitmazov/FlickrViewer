@@ -1,4 +1,4 @@
-package lz.renatkaitmazov.data.model.recent
+package lz.renatkaitmazov.data.model.recentphoto
 
 import com.google.gson.annotations.SerializedName
 

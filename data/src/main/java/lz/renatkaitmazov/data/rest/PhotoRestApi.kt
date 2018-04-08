@@ -1,7 +1,7 @@
 package lz.renatkaitmazov.data.rest
 
 import io.reactivex.Single
-import lz.renatkaitmazov.data.model.recent.RecentPhotosResponse
+import lz.renatkaitmazov.data.model.recentphoto.RecentPhotosResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -53,7 +53,7 @@ interface PhotoRestApi {
   }
 
   /**
-   * Returns a list of recent photos.
+   * Returns a raw JSON response that contains a list of recent photos.
    */
   @GET
   fun getRecentPhotos(@Path(PATH_KEY_METHOD) method: String,

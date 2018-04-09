@@ -4,7 +4,7 @@ package lz.renatkaitmazov.data.exception
  *
  * @author Renat Kaitmazov
  */
-class NoConnectionException : Exception {
+class NoInternetConnectionException : Exception {
   constructor()
   constructor(msg: String) : super(msg)
 }

@@ -1,9 +1,10 @@
 package lz.renatkaitmazov.data.rest
 
+import io.reactivex.Flowable
 import io.reactivex.Single
 import lz.renatkaitmazov.data.cache.Cache
 import lz.renatkaitmazov.data.device.IConnectivityChecker
-import lz.renatkaitmazov.data.exception.NoConnectionException
+import lz.renatkaitmazov.data.exception.NoInternetConnectionException
 import lz.renatkaitmazov.data.model.entity.RecentPhotoEntity
 import lz.renatkaitmazov.data.model.mapper.Mapper
 import lz.renatkaitmazov.data.model.recentphoto.RecentPhotoResponse
@@ -56,7 +57,7 @@ class PhotoRestRepository(
         }
         // Check if there is an Internet connection.
         if (!connectivityChecker.hasInternetConnection()) {
-          throw NoConnectionException(MSG_EXCEPTION_NO_CONNECTION)
+          throw NoInternetConnectionException(MSG_EXCEPTION_NO_CONNECTION)
         }
         // The data was not previously saved, make an http request to get it from the server.
         photoRestApi.getRecentPhotos(
@@ -67,18 +68,23 @@ class PhotoRestRepository(
           FORMAT_JSON,
           NO_JSON_CALLBACK,
           EXTRAS
-        ).subscribe({ response ->
-          val rawPhotos = response.photosMetaData.photoList
-          val photoEntities = mapper.map(rawPhotos)
-          cache.put(KEY_PHOTO_REST_REPOSITORY, photoEntities)
-          if (!emitter.isDisposed) {
-            emitter.onSuccess(photoEntities)
-          }
-        }, { error ->
-          if (!emitter.isDisposed) {
-            emitter.onError(error)
-          }
-        })
+        ).toFlowable()
+          .flatMap { Flowable.fromIterable(it.photosMetaData.photoList) }
+          .filter { it.thumbnailImageUrl.isNotBlank() }
+          .filter { it.mediumSizeImageUrl.isNotBlank() }
+          .filter { it.originalImageUrl.isNotBlank() }
+          .toList()
+          .subscribe({ photoResponseList ->
+            val photoEntities = mapper.map(photoResponseList)
+            cache.put(KEY_PHOTO_REST_REPOSITORY, photoEntities)
+            if (!emitter.isDisposed) {
+              emitter.onSuccess(photoEntities)
+            }
+          }, { error ->
+            if (!emitter.isDisposed) {
+              emitter.onError(error)
+            }
+          })
       } catch (error: Throwable) {
         if (!emitter.isDisposed) {
           emitter.onError(error)

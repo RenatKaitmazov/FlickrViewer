@@ -1,9 +1,9 @@
 package lz.renatkaitmazov.flickrviewer
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import lz.renatkaitmazov.flickrviewer.base.BaseActivity
 
-class PhotoListActivity : AppCompatActivity() {
+class PhotoListActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

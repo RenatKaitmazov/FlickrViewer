@@ -43,5 +43,4 @@ dependencies {
 
     // Reactive extension for reactive programming.
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
 }

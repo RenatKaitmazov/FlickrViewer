@@ -24,7 +24,7 @@ android {
 }
 
 ext {
-    supportLibraryVersion = '27.1.0'
+    supportLibraryVersion = '27.1.1'
     constraintLayoutVersion = '1.0.2'
     daggerVersion = '2.14.1'
     timberVersion = '4.7.0'
@@ -62,4 +62,8 @@ dependencies {
     // Memory leaks detector
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+
+    // Reactive extension for reactive programming.
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
 }

@@ -3,7 +3,7 @@ package lz.renatkaitmazov.data.rest
 import io.reactivex.Single
 import lz.renatkaitmazov.data.model.recentphoto.RecentPhotosResponse
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * Defines endpoints to get, search, and if possible download
@@ -55,12 +55,12 @@ interface PhotoRestApi {
   /**
    * Returns a raw JSON response that contains a list of recent photos.
    */
-  @GET
-  fun getRecentPhotos(@Path(PATH_KEY_METHOD) method: String,
-                      @Path(PATH_KEY_API_KEY) apiKey: String,
-                      @Path(PATH_KEY_PER_PAGE) photosPerPage: Int,
-                      @Path(PATH_KEY_PAGE) page: Int,
-                      @Path(PATH_KEY_FORMAT) format: String,
-                      @Path(PATH_KEY_NO_JSON_CALLBACK) noJsonCallback: Int,
-                      @Path(PATH_KEY_EXTRAS) extras: String): Single<RecentPhotosResponse>
+  @GET(".")
+  fun getRecentPhotos(@Query(PATH_KEY_METHOD) method: String,
+                      @Query(PATH_KEY_API_KEY) apiKey: String,
+                      @Query(PATH_KEY_PER_PAGE) photosPerPage: Int,
+                      @Query(PATH_KEY_PAGE) page: Int,
+                      @Query(PATH_KEY_FORMAT) format: String,
+                      @Query(PATH_KEY_NO_JSON_CALLBACK) noJsonCallback: Int,
+                      @Query(PATH_KEY_EXTRAS) extras: String): Single<RecentPhotosResponse>
 }

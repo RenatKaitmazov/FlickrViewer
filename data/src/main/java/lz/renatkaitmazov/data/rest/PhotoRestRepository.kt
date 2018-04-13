@@ -17,8 +17,8 @@ import retrofit2.Retrofit
 class PhotoRestRepository(
   retrofit: Retrofit,
   private val connectivityChecker: IConnectivityChecker,
-  private val cache: Cache<List<RecentPhotoEntity>>,
-  private val mapper: Mapper<List<RecentPhotoResponse>, List<RecentPhotoEntity>>
+  private val cache: @JvmSuppressWildcards Cache<List<RecentPhotoEntity>>,
+  private val mapper: @JvmSuppressWildcards Mapper<List<RecentPhotoResponse>, List<RecentPhotoEntity>>
 ) : IPhotoRestRepository {
 
   companion object {
@@ -27,7 +27,7 @@ class PhotoRestRepository(
      */
     private const val KEY_PHOTO_REST_REPOSITORY = "PhotoRestRepository"
     private const val METHOD_RECENT = "flickr.photos.getRecent"
-    private const val PHOTOS_PER_PAGE = 50
+    private const val PHOTOS_PER_PAGE = 100
     private const val FORMAT_JSON = "json"
     private const val NO_JSON_CALLBACK = 1
     /**
@@ -70,9 +70,12 @@ class PhotoRestRepository(
           EXTRAS
         ).toFlowable()
           .flatMap { Flowable.fromIterable(it.photosMetaData.photoList) }
-          .filter { it.thumbnailImageUrl.isNotBlank() }
-          .filter { it.mediumSizeImageUrl.isNotBlank() }
-          .filter { it.originalImageUrl.isNotBlank() }
+          .filter { it.thumbnailImageUrl != null }
+          .filter { it.thumbnailImageUrl!!.isNotBlank() }
+          .filter { it.mediumSizeImageUrl != null }
+          .filter { it.mediumSizeImageUrl!!.isNotBlank() }
+          .filter { it.originalImageUrl != null }
+          .filter { it.originalImageUrl!!.isNotBlank() }
           .toList()
           .subscribe({ photoResponseList ->
             val photoEntities = mapper.map(photoResponseList)

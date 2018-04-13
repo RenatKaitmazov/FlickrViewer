@@ -21,6 +21,11 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "BASE_URL", '"https://api.flickr.com/services/rest/"'
+        }
+        debug {
+            buildConfigField "String", "BASE_URL", '"https://api.flickr.com/services/rest/"'
         }
     }
 }
@@ -49,6 +54,7 @@ dependencies {
 
     // Android support library
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
 
     // Constraint layout
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
@@ -70,4 +76,12 @@ dependencies {
     // Reactive extension for reactive programming.
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+
+    // Networking
+    implementation "com.google.code.gson:gson:$gsonVersion" // To parse JSON responses.
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion" // Converts interfaces into REST calls.
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion" // Performs the actual networking.
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 }

@@ -1,7 +1,5 @@
 package lz.renatkaitmazov.data.device
 
-import io.reactivex.Single
-
 /**
  *
  * @author Renat Kaitmazov

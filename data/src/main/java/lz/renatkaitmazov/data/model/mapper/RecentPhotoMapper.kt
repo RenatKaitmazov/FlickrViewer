@@ -22,7 +22,7 @@ class RecentPhotoMapper : Mapper<List<RecentPhotoResponse>, List<RecentPhotoEnti
         response.mediumSizeImageUrl,
         response.originalImageUrl
       )
-      entityList[i] = entity
+      entityList.add(entity)
     }
     return entityList
   }

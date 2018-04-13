@@ -17,5 +17,6 @@ data class RecentPhotosMetaDataResponse(
   val photosPerPage: Int,
   @SerializedName("total")
   val numberOfPhotos: Int,
+  @SerializedName("photo")
   val photoList: List<RecentPhotoResponse>
 )

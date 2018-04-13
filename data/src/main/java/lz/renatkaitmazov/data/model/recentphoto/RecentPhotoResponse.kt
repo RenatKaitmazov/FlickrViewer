@@ -18,11 +18,11 @@ data class RecentPhotoResponse(
   @SerializedName("ispublic")
   val isPublic: Int,
   @SerializedName("url_s")
-  val thumbnailImageUrl: String = "",
+  val thumbnailImageUrl: String? = "",
   @SerializedName("url_c")
-  val mediumSizeImageUrl: String = "",
+  val mediumSizeImageUrl: String? = "",
   @SerializedName("url_o")
-  val originalImageUrl: String = ""
+  val originalImageUrl: String? = ""
 ) {
 
   override fun equals(other: Any?): Boolean {

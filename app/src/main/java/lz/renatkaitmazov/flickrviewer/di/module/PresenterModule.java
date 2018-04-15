@@ -5,6 +5,8 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
+import lz.renatkaitmazov.data.DaggerConstantKt;
+import lz.renatkaitmazov.data.model.mapper.Mapper;
 import lz.renatkaitmazov.data.repository.IPhotoRepository;
 import lz.renatkaitmazov.flickrviewer.di.scope.FragmentScope;
 import lz.renatkaitmazov.flickrviewer.photolist.IPhotoListFragmentPresenter;
@@ -26,10 +28,13 @@ public final class PresenterModule {
 
   @Provides
   @FragmentScope
-  static IPhotoListFragmentPresenter providePhotoListPresenter(PhotoListFragment fragment,
-                                                               @Named(RxModule.NAMED_FOR_FRAGMENT)
-                                                               CompositeDisposable disposable,
-                                                               IPhotoRepository repository) {
-    return new PhotoListFragmentPresenter(fragment, disposable, repository);
+  static IPhotoListFragmentPresenter providePhotoListPresenter(
+    PhotoListFragment fragment,
+    @Named(DaggerConstantKt.NAMED_FRG_COMPOSITE_DISPOSABLE)
+    CompositeDisposable disposable,
+    IPhotoRepository repository,
+    @Named(DaggerConstantKt.NAMED_FR_PHOTO_LIST_ADAPTER_ITEM)
+    Mapper mapper) {
+    return new PhotoListFragmentPresenter(fragment, disposable, repository, mapper);
   }
 }

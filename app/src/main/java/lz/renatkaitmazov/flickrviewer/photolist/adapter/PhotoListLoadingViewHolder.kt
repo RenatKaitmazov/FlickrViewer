@@ -7,6 +7,6 @@ import android.view.View
  *
  * @author Renat Kaitmazov
  */
-class PhotoListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class PhotoListLoadingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 }

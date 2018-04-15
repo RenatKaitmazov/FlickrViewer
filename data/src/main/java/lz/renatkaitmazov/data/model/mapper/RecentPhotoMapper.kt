@@ -18,9 +18,9 @@ class RecentPhotoMapper : Mapper<List<RecentPhotoResponse>, List<RecentPhotoEnti
         response.id,
         response.title,
         response.isPublic,
-        response.thumbnailImageUrl,
-        response.mediumSizeImageUrl,
-        response.originalImageUrl
+        response.thumbnailImageUrl!!,
+        response.mediumSizeImageUrl!!,
+        response.originalImageUrl!!
       )
       entityList.add(entity)
     }

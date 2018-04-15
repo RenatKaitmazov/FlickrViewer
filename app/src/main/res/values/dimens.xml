@@ -2,4 +2,7 @@
 <resources>
   <!--Elevation-->
   <dimen name="elevation_4dp">4dp</dimen>
+
+  <!--Dimensions related to views-->
+  <dimen name="height_thumbnail">200dp</dimen>
 </resources>

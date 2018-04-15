@@ -1,7 +1,10 @@
 package lz.renatkaitmazov.flickrviewer.di.module;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
+import lz.renatkaitmazov.data.DaggerConstantKt;
 import lz.renatkaitmazov.data.cache.Cache;
 import lz.renatkaitmazov.data.device.IConnectivityChecker;
 import lz.renatkaitmazov.data.model.mapper.Mapper;
@@ -32,6 +35,7 @@ public final class RepositoryModule {
     Retrofit retrofit,
     IConnectivityChecker checker,
     Cache cache,
+    @Named(DaggerConstantKt.NAMED_FR_RECENT_PHOTO_MAPPER)
     Mapper mapper
   ) {
     return new PhotoRestRepository(retrofit, checker, cache, mapper);

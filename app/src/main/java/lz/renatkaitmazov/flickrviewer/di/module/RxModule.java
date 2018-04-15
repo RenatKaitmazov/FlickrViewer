@@ -5,6 +5,7 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
+import lz.renatkaitmazov.data.DaggerConstantKt;
 import lz.renatkaitmazov.flickrviewer.di.scope.FragmentScope;
 
 /**
@@ -15,11 +16,9 @@ import lz.renatkaitmazov.flickrviewer.di.scope.FragmentScope;
 @Module
 public final class RxModule {
 
-  public static final String NAMED_FOR_FRAGMENT = "CompositeDisposable for fragment";
-
   @Provides
   @FragmentScope
-  @Named(NAMED_FOR_FRAGMENT)
+  @Named(DaggerConstantKt.NAMED_FRG_COMPOSITE_DISPOSABLE)
   static CompositeDisposable provideCompositeDisposableForFragment() {
     return new CompositeDisposable();
   }

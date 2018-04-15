@@ -36,6 +36,7 @@ ext {
     daggerVersion = '2.14.1'
     timberVersion = '4.7.0'
     leakCanaryVersion = '1.5.4'
+    glideVersion = '4.7.1'
 }
 
 dependencies {
@@ -84,4 +85,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion" // Performs the actual networking.
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+
+    // Image processing
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
 }

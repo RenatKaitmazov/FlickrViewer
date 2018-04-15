@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_photo_list.*
 import lz.renatkaitmazov.flickrviewer.R
 import lz.renatkaitmazov.flickrviewer.base.BaseFragment
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListAdapter
+import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
 import javax.inject.Inject
 
 /**
@@ -37,6 +38,8 @@ class PhotoListFragment
    * Used for pagination.
    */
   private var currentPage = 1
+
+  private val photoListAdapter = PhotoListAdapter()
 
   @Inject
   lateinit var presenter: IPhotoListFragmentPresenter
@@ -76,8 +79,9 @@ class PhotoListFragment
 
   private fun initRecyclerView() {
     photoListRecyclerView.setHasFixedSize(true)
-    photoListRecyclerView.adapter = PhotoListAdapter()
-    photoListRecyclerView.layoutManager = GridLayoutManager(app, 3)
+    photoListRecyclerView.adapter = photoListAdapter
+    val spanCount = resources.getInteger(R.integer.span_count)
+    photoListRecyclerView.layoutManager = GridLayoutManager(app, spanCount)
   }
 
   override fun showProgress() {
@@ -89,6 +93,9 @@ class PhotoListFragment
   }
 
   override fun onRefresh() {
+  }
 
+  override fun showThumbnails(thumbnails: List<PhotoListAdapterItem>) {
+    photoListAdapter.update(thumbnails)
   }
 }

@@ -3,9 +3,14 @@ package lz.renatkaitmazov.flickrviewer.photolist
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import lz.renatkaitmazov.data.NAMED_FRG_COMPOSITE_DISPOSABLE
+import lz.renatkaitmazov.data.model.entity.RecentPhotoEntity
+import lz.renatkaitmazov.data.model.mapper.Mapper
 import lz.renatkaitmazov.data.repository.IPhotoRepository
 import lz.renatkaitmazov.flickrviewer.base.BasePresenter
+import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
 import timber.log.Timber
+import javax.inject.Named
 
 /**
  *
@@ -13,8 +18,11 @@ import timber.log.Timber
  */
 class PhotoListFragmentPresenter(
   view: PhotoListFragmentView,
+  @Named(NAMED_FRG_COMPOSITE_DISPOSABLE)
   subscriptionManager: CompositeDisposable,
-  private val repository: IPhotoRepository
+  private val repository: IPhotoRepository,
+  @Named()
+  private val mapper: @JvmSuppressWildcards Mapper<List<RecentPhotoEntity>, List<PhotoListAdapterItem>>
 ) : BasePresenter<PhotoListFragmentView>(view, subscriptionManager),
   IPhotoListFragmentPresenter {
 
@@ -24,7 +32,8 @@ class PhotoListFragmentPresenter(
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe { view?.showProgress() }
       .doFinally { view?.hideProgress() }
-      .subscribe({ Timber.d(it.toString()) }, Timber::e)
+      .map(mapper::map)
+      .subscribe({ view?.showThumbnails(it) }, Timber::e)
     subscriptionManager.add(disposable)
   }
 }

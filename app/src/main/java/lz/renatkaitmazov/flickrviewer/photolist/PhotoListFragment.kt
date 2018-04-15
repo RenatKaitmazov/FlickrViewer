@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.Toolbar
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_photo_list.*
 import lz.renatkaitmazov.flickrviewer.R
@@ -66,7 +65,6 @@ class PhotoListFragment
   override fun getViewResId() = R.layout.fragment_photo_list
 
   private fun initToolbar() {
-    val toolbar = includedToolbar as Toolbar
     if (supportsMaterialDesign()) {
       val toolbarElevation = resources.getDimension(R.dimen.elevation_4dp)
       toolbar.elevation = toolbarElevation

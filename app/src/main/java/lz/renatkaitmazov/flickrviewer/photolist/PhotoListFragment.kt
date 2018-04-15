@@ -69,6 +69,7 @@ class PhotoListFragment
       val toolbarElevation = resources.getDimension(R.dimen.elevation_4dp)
       toolbar.elevation = toolbarElevation
     }
+    toolbar.setTitle(R.string.title_recent_photos)
     val hostActivity = activity as? AppCompatActivity
     hostActivity?.setSupportActionBar(toolbar)
   }

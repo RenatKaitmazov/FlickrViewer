@@ -1,7 +1,7 @@
 package lz.renatkaitmazov.flickrviewer.photolist.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.SparseArray
 import android.view.ViewGroup
 import lz.renatkaitmazov.flickrviewer.base.adapter.AdapterDelegate
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
@@ -35,9 +35,9 @@ class PhotoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
    */
   private val delegates = HashMap<Int, AdapterDelegate<List<PhotoListAdapterItem>>>()
 
-  constructor() {
-    delegates[TYPE_THUMBNAIL_ITEM] = PhotoListThumbnailAdapterDelegate()
-    delegates[TYPE_LOADING_ITEM] = PhotoListLoadingAdapterDelegate()
+  constructor(ctx: Context) {
+    delegates[TYPE_THUMBNAIL_ITEM] = PhotoListThumbnailAdapterDelegate(ctx)
+    delegates[TYPE_LOADING_ITEM] = PhotoListLoadingAdapterDelegate(ctx)
   }
 
   override fun getItemCount(): Int {
@@ -45,7 +45,6 @@ class PhotoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
   }
 
   override fun getItemViewType(position: Int): Int {
-    val size = delegates.size
     for (viewType in delegates.keys) {
       val delegate = delegates[viewType]
       if (delegate != null) {

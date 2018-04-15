@@ -1,5 +1,6 @@
 package lz.renatkaitmazov.flickrviewer.photolist
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_photo_list.*
 import lz.renatkaitmazov.flickrviewer.R
 import lz.renatkaitmazov.flickrviewer.base.BaseFragment
+import lz.renatkaitmazov.flickrviewer.photolist.adapter.DividerDecoration
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListAdapter
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
 import javax.inject.Inject
@@ -39,12 +41,15 @@ class PhotoListFragment
    */
   private var currentPage = 1
 
-  private val photoListAdapter = PhotoListAdapter()
+  private lateinit var photoListAdapter: PhotoListAdapter
 
   @Inject
   lateinit var presenter: IPhotoListFragmentPresenter
 
-  override fun getViewResId() = R.layout.fragment_photo_list
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    photoListAdapter = PhotoListAdapter(app as Context)
+  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     initToolbar()
@@ -57,6 +62,8 @@ class PhotoListFragment
     presenter.unbind()
     super.onDestroy()
   }
+
+  override fun getViewResId() = R.layout.fragment_photo_list
 
   private fun initToolbar() {
     val toolbar = includedToolbar as Toolbar
@@ -82,6 +89,9 @@ class PhotoListFragment
     photoListRecyclerView.adapter = photoListAdapter
     val spanCount = resources.getInteger(R.integer.span_count)
     photoListRecyclerView.layoutManager = GridLayoutManager(app, spanCount)
+    val clearance = resources.getDimension(R.dimen.clearance_image_item).toInt()
+    val dividerDecoration = DividerDecoration(clearance, spanCount)
+    photoListRecyclerView.addItemDecoration(dividerDecoration)
   }
 
   override fun showProgress() {

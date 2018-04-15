@@ -5,4 +5,5 @@
 
   <!--Dimensions related to views-->
   <dimen name="height_thumbnail">200dp</dimen>
+  <dimen name="clearance_image_item">1dp</dimen>
 </resources>

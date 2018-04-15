@@ -28,17 +28,6 @@ class FlickViewerApp
   var referenceWatcher: RefWatcher? = null
     private set
 
-  companion object {
-
-    /**
-     * Returns the current application instance.
-     *
-     * @param ctx see [Context].
-     * @return current application instance.
-     */
-    fun get(ctx: Context): FlickViewerApp = ctx.applicationContext as FlickViewerApp
-  }
-
   override fun onCreate() {
     super.onCreate()
     initDagger()

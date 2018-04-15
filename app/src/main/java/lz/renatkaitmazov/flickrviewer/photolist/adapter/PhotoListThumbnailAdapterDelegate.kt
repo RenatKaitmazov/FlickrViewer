@@ -1,5 +1,6 @@
 package lz.renatkaitmazov.flickrviewer.photolist.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,15 +15,16 @@ import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListThumbnailItem
  *
  * @author Renat Kaitmazov
  */
-class PhotoListThumbnailAdapterDelegate : AdapterDelegate<List<PhotoListAdapterItem>> {
+class PhotoListThumbnailAdapterDelegate(
+  private val context: Context
+) : AdapterDelegate<List<PhotoListAdapterItem>> {
 
   override fun isForViewType(items: List<PhotoListAdapterItem>, position: Int): Boolean {
     return items[position] is PhotoListThumbnailItem
   }
 
   override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-    val ctx = parent.context
-    val inflater = LayoutInflater.from(ctx)
+    val inflater = LayoutInflater.from(context)
     val view = inflater.inflate(R.layout.item_photo_list_thumbnail, parent, false)
     return PhotoListThumbnailViewHolder(view)
   }
@@ -32,8 +34,7 @@ class PhotoListThumbnailAdapterDelegate : AdapterDelegate<List<PhotoListAdapterI
                                 viewHolder: RecyclerView.ViewHolder) {
     val holder = viewHolder as PhotoListThumbnailViewHolder
     val item = items[position] as PhotoListThumbnailItem
-    val ctx = holder.itemView.context
-    Glide.with(ctx)
+    Glide.with(context)
       .load(item.thumbnailUrl)
       .into(holder.thumbnailImageView)
   }

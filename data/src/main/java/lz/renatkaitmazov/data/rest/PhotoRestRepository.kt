@@ -95,4 +95,13 @@ class PhotoRestRepository(
       }
     }
   }
+
+  override fun updatePhotoList(): Single<List<RecentPhotoEntity>> {
+    invalidateCache()
+    return getRecentPhotos(1)
+  }
+
+  private fun invalidateCache() {
+    cache.remove(KEY_PHOTO_REST_REPOSITORY)
+  }
 }

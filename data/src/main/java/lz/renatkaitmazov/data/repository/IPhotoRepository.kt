@@ -18,4 +18,9 @@ interface IPhotoRepository {
    * @return a list of recent photos.
    */
   fun getPhotoList(page: Int): Single<List<RecentPhotoEntity>>
+
+  /**
+   * Invalidates the cache and fetches the most recent photos.
+   */
+  fun updatePhotoList(): Single<List<RecentPhotoEntity>>
 }

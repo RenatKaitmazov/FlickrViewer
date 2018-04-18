@@ -15,4 +15,8 @@ class PhotoRepository(
   override fun getPhotoList(page: Int): Single<List<RecentPhotoEntity>> {
     return restRepository.getRecentPhotos(page)
   }
+
+  override fun updatePhotoList(): Single<List<RecentPhotoEntity>> {
+    return restRepository.updatePhotoList()
+  }
 }

@@ -100,9 +100,15 @@ class PhotoListFragment
   }
 
   override fun onRefresh() {
+    resetState()
+    presenter.updatePhotoList()
   }
 
   override fun showThumbnails(thumbnails: List<PhotoListAdapterItem>) {
     photoListAdapter.update(thumbnails)
+  }
+
+  private fun resetState() {
+    currentPage = 1
   }
 }

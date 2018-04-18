@@ -16,4 +16,9 @@ interface IPhotoListFragmentPresenter : Presenter<PhotoListFragmentView> {
    * @param page used for pagination.
    */
   fun getPhotoList(page: Int)
+
+  /**
+   * Erases the current list of photos and returns a brand new one from the server.
+   */
+  fun updatePhotoList()
 }

@@ -32,7 +32,8 @@
       android:id="@+id/photoListRecyclerView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      style="@style/VerticalScrollbarStyle"/>
+      style="@style/VerticalScrollbarStyle"
+      android:layoutAnimation="@anim/layout_animation_fly_up"/>
 
   </android.support.v4.widget.SwipeRefreshLayout>
 

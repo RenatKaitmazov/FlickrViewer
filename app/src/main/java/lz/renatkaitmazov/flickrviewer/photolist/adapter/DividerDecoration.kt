@@ -19,22 +19,26 @@ class DividerDecoration(
                               state: RecyclerView.State?) {
     val position = parent.getChildAdapterPosition(view)
     // Go clockwise and set clearance if possible.
+    outRect.top = clearance
+    outRect.right = clearance
+    outRect.bottom = clearance
+    outRect.left = clearance
     val isFirstRow = position < spanCount
     val isLastColumn = (spanCount - 1) == (position % spanCount)
     val isLastRow = position >= (parent.adapter.itemCount - spanCount)
     val isFirstColumn = (position % spanCount) == 0
 
-    if (!isFirstRow) {
-      outRect.top = clearance
+    if (isFirstRow) {
+      outRect.top = clearance shl 1
     }
-    if (!isLastColumn) {
-      outRect.right = clearance
+    if (isLastColumn) {
+      outRect.right = clearance shl 1
     }
-    if (!isLastRow) {
-      outRect.bottom = clearance
+    if (isLastRow) {
+      outRect.bottom = clearance shl 1
     }
-    if (!isFirstColumn) {
-      outRect.left = clearance
+    if (isFirstColumn) {
+      outRect.left = clearance shl 1
     }
   }
 }

@@ -11,6 +11,7 @@ import lz.renatkaitmazov.flickrviewer.R
 import lz.renatkaitmazov.flickrviewer.base.BaseFragment
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.DividerDecoration
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListAdapter
+import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListItemAnimator
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
 import javax.inject.Inject
 
@@ -44,11 +45,6 @@ class PhotoListFragment
 
   @Inject
   lateinit var presenter: IPhotoListFragmentPresenter
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    photoListAdapter = PhotoListAdapter(app as Context)
-  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     initToolbar()
@@ -84,8 +80,10 @@ class PhotoListFragment
   }
 
   private fun initRecyclerView() {
+    photoListAdapter = PhotoListAdapter(activity as Context)
     photoListRecyclerView.setHasFixedSize(true)
     photoListRecyclerView.adapter = photoListAdapter
+    photoListRecyclerView.itemAnimator = PhotoListItemAnimator()
     val spanCount = resources.getInteger(R.integer.span_count)
     photoListRecyclerView.layoutManager = GridLayoutManager(app, spanCount)
     val clearance = resources.getDimension(R.dimen.clearance_image_item).toInt()

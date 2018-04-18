@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_photo_list.*
 import lz.renatkaitmazov.flickrviewer.R
@@ -41,10 +43,20 @@ class PhotoListFragment
    */
   private var currentPage = 1
 
+  /**
+   * The maximum page the user has scrolled so far.
+   */
+  private var maxPage = 0
+
   private lateinit var photoListAdapter: PhotoListAdapter
 
   @Inject
   lateinit var presenter: IPhotoListFragmentPresenter
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setHasOptionsMenu(true)
+  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     initToolbar()
@@ -91,6 +103,10 @@ class PhotoListFragment
     photoListRecyclerView.addItemDecoration(dividerDecoration)
   }
 
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    inflater.inflate(R.menu.menu_photo_list, menu)
+  }
+
   override fun showProgress() {
     photoListRefreshLayout.isRefreshing = true
   }
@@ -110,5 +126,6 @@ class PhotoListFragment
 
   private fun resetState() {
     currentPage = 1
+    maxPage = 0
   }
 }

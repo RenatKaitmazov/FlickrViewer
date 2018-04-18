@@ -2,4 +2,10 @@
   <string name="app_name">FlickrViewer</string>
 
   <string name="title_recent_photos">Recent</string>
+
+  <!--Menu items titles-->
+  <string name="menu_title_search">Search</string>
+
+  <!--Hints-->
+  <string name="hint_search_photos">Search photos</string>
 </resources>

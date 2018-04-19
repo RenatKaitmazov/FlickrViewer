@@ -7,18 +7,18 @@ import java.util.concurrent.ConcurrentHashMap
  *
  * @author Renat Kaitmazov
  */
-class RecentPhotoCache : Cache<List<RecentPhotoEntity>> {
+class RecentPhotoCache : Cache<MutableList<RecentPhotoEntity>> {
 
   /**
    * The underlying data structure that supports thread-safe operations.
    */
-  private val cache = ConcurrentHashMap<String, List<RecentPhotoEntity>>()
+  private val cache = ConcurrentHashMap<String, MutableList<RecentPhotoEntity>>()
 
-  override fun get(key: String): List<RecentPhotoEntity>? {
+  override fun get(key: String): MutableList<RecentPhotoEntity>? {
     return cache[key]
   }
 
-  override fun put(key: String, value: List<RecentPhotoEntity>) {
+  override fun put(key: String, value: MutableList<RecentPhotoEntity>) {
     cache[key] = value
   }
 

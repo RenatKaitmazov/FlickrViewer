@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import lz.renatkaitmazov.flickrviewer.base.adapter.AdapterDelegate
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
+import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListLoadingItem
 
 /**
  *
@@ -23,6 +24,9 @@ class PhotoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * An identifier for a view holder that displays some sort of a progress.
      */
     private const val TYPE_LOADING_ITEM = 1_100
+
+    @JvmStatic
+    private val LOADING_ITEM: PhotoListAdapterItem = PhotoListLoadingItem()
   }
 
   /**
@@ -76,5 +80,36 @@ class PhotoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
     this.items.clear()
     this.items.addAll(items)
     notifyDataSetChanged()
+  }
+
+  /**
+   * Appends the given list of items to the end of the current list of items without
+   * deleting them.
+   */
+  fun append(items: List<PhotoListAdapterItem>) {
+    val rangeStartPosition = this.items.size
+    this.items.addAll(items)
+    val count = items.size
+    notifyItemRangeInserted(rangeStartPosition, count)
+  }
+
+  /**
+   * Inserts an item that shows a progress into [items].
+   */
+  fun addLoadingItem() {
+    val itemPosition = items.size
+    items.add(LOADING_ITEM)
+    notifyItemInserted(itemPosition)
+  }
+
+  /**
+   * Removes an item with progress from the list.
+   * It is assumed that the loading item is last one in [items],
+   * so it is up to client of this class to know when to call this method.
+   * It does not perform any checks.
+   */
+  fun removeLoadingItem() {
+    items.removeAt(items.lastIndex)
+    notifyItemRemoved(items.lastIndex)
   }
 }

@@ -35,7 +35,7 @@ public final class RepositoryModule {
     Retrofit retrofit,
     IConnectivityChecker checker,
     Cache cache,
-    @Named(DaggerConstantKt.NAMED_FR_RECENT_PHOTO_MAPPER)
+    @Named(DaggerConstantKt.NAMED_FRG_RECENT_PHOTO_MAPPER)
     Mapper mapper
   ) {
     return new PhotoRestRepository(retrofit, checker, cache, mapper);

@@ -12,11 +12,15 @@ class PhotoRepository(
   private val restRepository: IPhotoRestRepository
 ) : IPhotoRepository {
 
-  override fun getPhotoList(page: Int): Single<List<RecentPhotoEntity>> {
-    return restRepository.getRecentPhotos(page)
+  override fun getPhotoListAtFirstPage(): Single<List<RecentPhotoEntity>> {
+    return restRepository.getRecentPhotosAtFirstPage()
   }
 
   override fun updatePhotoList(): Single<List<RecentPhotoEntity>> {
     return restRepository.updatePhotoList()
+  }
+
+  override fun getNextPage(page: Int): Single<List<RecentPhotoEntity>> {
+    return restRepository.getNextPage(page)
   }
 }

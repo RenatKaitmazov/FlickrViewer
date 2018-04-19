@@ -20,14 +20,14 @@ public final class MapperModule {
 
   @Provides
   @FragmentScope
-  @Named(DaggerConstantKt.NAMED_FR_RECENT_PHOTO_MAPPER)
+  @Named(DaggerConstantKt.NAMED_FRG_RECENT_PHOTO_MAPPER)
   static Mapper provideRecentPhotoMapper() {
     return new RecentPhotoMapper();
   }
 
   @Provides
   @FragmentScope
-  @Named(DaggerConstantKt.NAMED_FR_PHOTO_LIST_ADAPTER_ITEM)
+  @Named(DaggerConstantKt.NAMED_FRG_PHOTO_LIST_ADAPTER_ITEM)
   static Mapper providePhotoListAdapterItemMapper() {
     return new PhotoListAdapterItemMapper();
   }

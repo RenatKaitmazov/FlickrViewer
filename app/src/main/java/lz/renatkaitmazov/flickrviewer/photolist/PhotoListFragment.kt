@@ -8,10 +8,12 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_photo_list.*
 import lz.renatkaitmazov.flickrviewer.R
 import lz.renatkaitmazov.flickrviewer.base.BaseFragment
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.DividerDecoration
+import lz.renatkaitmazov.flickrviewer.photolist.adapter.InfiniteBottomScroll
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListAdapter
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListItemAnimator
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
@@ -24,13 +26,19 @@ import javax.inject.Inject
 class PhotoListFragment
   : BaseFragment(),
   PhotoListFragmentView,
-  SwipeRefreshLayout.OnRefreshListener {
+  SwipeRefreshLayout.OnRefreshListener,
+  InfiniteBottomScroll.Callback {
 
   companion object {
     /**
-     * Uniquely identifies this fragment.
+     * The user can view at most 10 pages.
      */
-    const val ID = "PhotoListFragment"
+    private const val MAX_PAGE_LIMIT = 10
+
+    /**
+     * Number of items left for the user to reach the very end of the list.
+     */
+    private const val ITEMS_THRESHOLD = 6
 
     /**
      * A handy factory method to create instances of this class.
@@ -44,11 +52,14 @@ class PhotoListFragment
   private var currentPage = 1
 
   /**
-   * The maximum page the user has scrolled so far.
+   * A flag used for pagination to determine if the server has more data to return.
+   * TODO Change its status depending on the returned data.
    */
-  private var maxPage = 0
+  private var serverHasMoreData = true
 
   private lateinit var photoListAdapter: PhotoListAdapter
+
+  private val paginator = InfiniteBottomScroll(this)
 
   @Inject
   lateinit var presenter: IPhotoListFragmentPresenter
@@ -62,7 +73,7 @@ class PhotoListFragment
     initToolbar()
     initRefreshLayout()
     initRecyclerView()
-    presenter.getPhotoList(currentPage)
+    presenter.getPhotoListAtFirstPage()
   }
 
   override fun onDestroy() {
@@ -97,10 +108,11 @@ class PhotoListFragment
     photoListRecyclerView.adapter = photoListAdapter
     photoListRecyclerView.itemAnimator = PhotoListItemAnimator()
     val spanCount = resources.getInteger(R.integer.span_count)
-    photoListRecyclerView.layoutManager = GridLayoutManager(app, spanCount)
+    photoListRecyclerView.layoutManager = GridLayoutManager(activity, spanCount)
     val clearance = resources.getDimension(R.dimen.clearance_image_item).toInt()
     val dividerDecoration = DividerDecoration(clearance, spanCount)
     photoListRecyclerView.addItemDecoration(dividerDecoration)
+    photoListRecyclerView.addOnScrollListener(paginator)
   }
 
   override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -124,8 +136,42 @@ class PhotoListFragment
     photoListAdapter.update(thumbnails)
   }
 
+  override fun addLoadingItem() {
+    photoListAdapter.addLoadingItem()
+  }
+
+  override fun removeLoadingItem() {
+    photoListAdapter.removeLoadingItem()
+  }
+
+  override fun showNextPageError() {
+    // Need to decrement the current page because the attempt to load a new page was not
+    // successful.
+    --currentPage
+    // TODO Create a string in resources.
+    Toast.makeText(activity, "Error loading next page", Toast.LENGTH_SHORT).show()
+  }
+
+  override fun showNextPageThumbnails(thumbnails: List<PhotoListAdapterItem>) {
+    photoListAdapter.append(thumbnails)
+    paginator.loadingCompleted()
+  }
+
   private fun resetState() {
     currentPage = 1
-    maxPage = 0
+    serverHasMoreData = true
+  }
+
+  override fun canLoadMore(): Boolean {
+    val layoutManager = photoListRecyclerView.layoutManager as GridLayoutManager
+    val totalItemCount = layoutManager.itemCount
+    val lastCompletelyVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition()
+    val closeToBottom = ITEMS_THRESHOLD >= (totalItemCount - lastCompletelyVisibleItemPosition)
+    val didNotExceedPageLimit = currentPage <= MAX_PAGE_LIMIT
+    return didNotExceedPageLimit && closeToBottom && serverHasMoreData
+  }
+
+  override fun loadMode() {
+    presenter.getNextPage(++currentPage)
   }
 }

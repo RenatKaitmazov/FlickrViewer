@@ -33,7 +33,7 @@ public final class PresenterModule {
     @Named(DaggerConstantKt.NAMED_FRG_COMPOSITE_DISPOSABLE)
     CompositeDisposable disposable,
     IPhotoRepository repository,
-    @Named(DaggerConstantKt.NAMED_FR_PHOTO_LIST_ADAPTER_ITEM)
+    @Named(DaggerConstantKt.NAMED_FRG_PHOTO_LIST_ADAPTER_ITEM)
     Mapper mapper) {
     return new PhotoListFragmentPresenter(fragment, disposable, repository, mapper);
   }

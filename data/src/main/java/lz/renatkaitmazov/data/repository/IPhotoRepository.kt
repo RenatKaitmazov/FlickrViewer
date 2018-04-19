@@ -14,13 +14,16 @@ interface IPhotoRepository {
   /**
    * Returns a list of recent photos.
    *
-   * @param page used for pagination.
    * @return a list of recent photos.
    */
-  fun getPhotoList(page: Int): Single<List<RecentPhotoEntity>>
+  fun getPhotoListAtFirstPage(): Single<List<RecentPhotoEntity>>
 
   /**
    * Invalidates the cache and fetches the most recent photos.
+   *
+   * @return list of updates photos.
    */
   fun updatePhotoList(): Single<List<RecentPhotoEntity>>
+
+  fun getNextPage(page: Int): Single<List<RecentPhotoEntity>>
 }

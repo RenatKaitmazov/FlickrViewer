@@ -4,7 +4,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import lz.renatkaitmazov.data.NAMED_FRG_COMPOSITE_DISPOSABLE
-import lz.renatkaitmazov.data.NAMED_FR_PHOTO_LIST_ADAPTER_ITEM
+import lz.renatkaitmazov.data.NAMED_FRG_PHOTO_LIST_ADAPTER_ITEM
 import lz.renatkaitmazov.data.model.entity.RecentPhotoEntity
 import lz.renatkaitmazov.data.model.mapper.Mapper
 import lz.renatkaitmazov.data.repository.IPhotoRepository
@@ -22,13 +22,13 @@ class PhotoListFragmentPresenter(
   @Named(NAMED_FRG_COMPOSITE_DISPOSABLE)
   subscriptionManager: CompositeDisposable,
   private val repository: IPhotoRepository,
-  @Named(NAMED_FR_PHOTO_LIST_ADAPTER_ITEM)
+  @Named(NAMED_FRG_PHOTO_LIST_ADAPTER_ITEM)
   private val mapper: @JvmSuppressWildcards Mapper<List<RecentPhotoEntity>, List<PhotoListAdapterItem>>
 ) : BasePresenter<PhotoListFragmentView>(view, subscriptionManager),
   IPhotoListFragmentPresenter {
 
-  override fun getPhotoList(page: Int) {
-    val getListDisposable = repository.getPhotoList(page)
+  override fun getPhotoListAtFirstPage() {
+    val getListDisposable = repository.getPhotoListAtFirstPage()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe { view?.showProgress() }
@@ -46,5 +46,28 @@ class PhotoListFragmentPresenter(
       .map(mapper::map)
       .subscribe({ view?.showThumbnails(it) }, Timber::e)
     subscriptionManager.add(updateDisposable)
+  }
+
+  override fun getNextPage(page: Int) {
+    val nextPageDisposable = repository.getNextPage(page)
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe { view?.addLoadingItem() }
+      .map(mapper::map)
+      .subscribe({
+        val view = this.view
+        if (view != null) {
+          view.removeLoadingItem()
+          view.showNextPageThumbnails(it)
+        }
+      }, {error ->
+        Timber.e(error)
+        val view = this.view
+        if (view != null) {
+          view.removeLoadingItem()
+          view.showNextPageError()
+        }
+      })
+    subscriptionManager.add(nextPageDisposable)
   }
 }

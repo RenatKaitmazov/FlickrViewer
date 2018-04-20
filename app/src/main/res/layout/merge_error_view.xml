@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+      android:id="@+id/errorImageView"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/error_image_view_height"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      android:layout_marginTop="@dimen/margin_small"
+      android:scaleType="centerInside" />
+
+    <TextView
+      android:id="@+id/errorTitleTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintTop_toBottomOf="@id/errorImageView"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      android:layout_marginTop="@dimen/margin_small"
+      android:padding="@dimen/padding_tiny"
+      android:gravity="center"
+      style="@style/TextAppearance.AppCompat.Large"
+      tools:text="No Internet Connection Error"/>
+
+    <TextView
+      android:id="@+id/errorDescriptionTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintTop_toBottomOf="@id/errorTitleTextView"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      android:padding="@dimen/padding_tiny"
+      android:gravity="center"
+      style="@style/TextAppearance.AppCompat.Body1"
+      tools:text="It seems like you are not connected to the internet. Make sure you have an Internet connection and try again"/>
+
+    <Button
+      android:id="@+id/errorButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      android:layout_marginTop="@dimen/margin_small"
+      android:layout_marginEnd="@dimen/margin_tiny"
+      android:layout_marginBottom="@dimen/margin_tiny"
+      android:layout_marginStart="@dimen/margin_tiny"
+      tools:text="Retry"/>
+
+  </android.support.constraint.ConstraintLayout>
+
+</merge>

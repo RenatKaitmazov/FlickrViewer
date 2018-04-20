@@ -9,4 +9,16 @@
 
   <!--Hints-->
   <string name="hint_search_photos">Поиск фотографий</string>
+
+  <!--Errors-->
+  <string name="error_when_loading">Возникла ошибка во время загрузки</string>
+  <string name="error_no_connection">Нет соединения с сетью</string>
+  <string name="error_no_results">Нет данных для отображения</string>
+
+  <!--Titles-->
+  <string name="title_retry">Повторить</string>
+  <string name="title_update">Обновить</string>
+
+  <!--Descriptions-->
+  <string name="description_no_connection">Вы не подключены к интернету.\nУбедитесь, что у вас есть интернет соединение и повторите снова.</string>
 </resources>

@@ -34,7 +34,7 @@ class PhotoListFragmentPresenter(
       .doOnSubscribe { view?.showProgress() }
       .doFinally { view?.hideProgress() }
       .map(mapper::map)
-      .subscribe({ view?.showThumbnails(it) }, Timber::e)
+      .subscribe(this::handleFirstPageSuccess, this::handleFirstPageError)
     subscriptionManager.add(getListDisposable)
   }
 
@@ -42,9 +42,10 @@ class PhotoListFragmentPresenter(
     val updateDisposable = repository.updatePhotoList()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe { view?.resetState() }
       .doFinally { view?.hideProgress() }
       .map(mapper::map)
-      .subscribe({ view?.showThumbnails(it) }, Timber::e)
+      .subscribe(this::handleFirstPageSuccess, this::handleFirstPageError)
     subscriptionManager.add(updateDisposable)
   }
 
@@ -57,17 +58,37 @@ class PhotoListFragmentPresenter(
       .subscribe({
         val view = this.view
         if (view != null) {
+          if (it.isEmpty()) {
+            view.onNextPageEmptyResponseError()
+            return@subscribe
+          }
           view.removeLoadingItem()
           view.showNextPageThumbnails(it)
         }
-      }, {error ->
+      }, { error ->
         Timber.e(error)
         val view = this.view
         if (view != null) {
           view.removeLoadingItem()
-          view.showNextPageError()
+          view.onNextPageNetworkError()
         }
       })
     subscriptionManager.add(nextPageDisposable)
+  }
+
+  private fun handleFirstPageSuccess(response: List<PhotoListAdapterItem>) {
+    ifViewNotNull {
+      if (response.isEmpty()) {
+        it.onFirstPageEmptyResponseError()
+        return@ifViewNotNull
+      }
+      it.hideAnyVisibleError()
+      it.showThumbnails(response)
+    }
+  }
+
+  private fun handleFirstPageError(error: Throwable) {
+    Timber.e(error)
+    view?.onFirstPageNetworkError()
   }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="ErrorView">
+    <attr name="errorImageSrc" format="reference" />
+    <attr name="errorTitleText" format="string|reference" />
+    <attr name="errorDescriptionText" format="string|reference" />
+    <attr name="errorButtonText" format="string|reference" />
+  </declare-styleable>
+</resources>

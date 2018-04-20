@@ -8,10 +8,10 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_photo_list.*
 import lz.renatkaitmazov.flickrviewer.R
 import lz.renatkaitmazov.flickrviewer.base.BaseFragment
+import lz.renatkaitmazov.flickrviewer.base.showLongToast
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.DividerDecoration
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.InfiniteBottomScroll
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListAdapter
@@ -53,7 +53,6 @@ class PhotoListFragment
 
   /**
    * A flag used for pagination to determine if the server has more data to return.
-   * TODO Change its status depending on the returned data.
    */
   private var serverHasMoreData = true
 
@@ -73,6 +72,8 @@ class PhotoListFragment
     initToolbar()
     initRefreshLayout()
     initRecyclerView()
+    initNoConnectionErrorView()
+    initNoResultsErrorView()
     presenter.getPhotoListAtFirstPage()
   }
 
@@ -115,6 +116,18 @@ class PhotoListFragment
     photoListRecyclerView.addOnScrollListener(paginator)
   }
 
+  private fun initNoConnectionErrorView() {
+    noConnectionErrorView.setOnErrorButtonClickListener(View.OnClickListener {
+      presenter.updatePhotoList()
+    })
+  }
+
+  private fun initNoResultsErrorView() {
+    noResultsErrorView.setOnErrorButtonClickListener(View.OnClickListener {
+      presenter.updatePhotoList()
+    })
+  }
+
   override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
     inflater.inflate(R.menu.menu_photo_list, menu)
   }
@@ -128,7 +141,6 @@ class PhotoListFragment
   }
 
   override fun onRefresh() {
-    resetState()
     presenter.updatePhotoList()
   }
 
@@ -144,12 +156,29 @@ class PhotoListFragment
     photoListAdapter.removeLoadingItem()
   }
 
-  override fun showNextPageError() {
+  override fun onFirstPageNetworkError() {
+    noConnectionErrorView.show()
+  }
+
+  override fun onNextPageNetworkError() {
     // Need to decrement the current page because the attempt to load a new page was not
     // successful.
     --currentPage
-    // TODO Create a string in resources.
-    Toast.makeText(activity, "Error loading next page", Toast.LENGTH_SHORT).show()
+    showLongToast(R.string.error_when_loading)
+  }
+
+  override fun onFirstPageEmptyResponseError() {
+    serverHasMoreData = false
+    noResultsErrorView.show()
+  }
+
+  override fun onNextPageEmptyResponseError() {
+    serverHasMoreData = false
+  }
+
+  override fun hideAnyVisibleError() {
+    noConnectionErrorView.hide()
+    noResultsErrorView.hide()
   }
 
   override fun showNextPageThumbnails(thumbnails: List<PhotoListAdapterItem>) {
@@ -157,7 +186,7 @@ class PhotoListFragment
     paginator.loadingCompleted()
   }
 
-  private fun resetState() {
+  override fun resetState() {
     currentPage = 1
     serverHasMoreData = true
   }

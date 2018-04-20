@@ -8,4 +8,16 @@
 
   <!--Hints-->
   <string name="hint_search_photos">Search photos</string>
+
+  <!--Errors-->
+  <string name="error_when_loading">Error occurred while loading</string>
+  <string name="error_no_connection">No Internet connection</string>
+  <string name="error_no_results">Nothing to show</string>
+
+  <!--Titles-->
+  <string name="title_retry">Retry</string>
+  <string name="title_update">Update</string>
+
+  <!--Descriptions-->
+  <string name="description_no_connection">You are not connected to the Internet.\nMake sure you have Internet connection and retry again.</string>
 </resources>

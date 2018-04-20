@@ -3,8 +3,18 @@
   <!--Elevation-->
   <dimen name="elevation_4dp">4dp</dimen>
 
+  <!--Margin-->
+  <dimen name="margin_tiny">8dp</dimen>
+  <dimen name="margin_small">16dp</dimen>
+
+  <!--Padding-->
+  <dimen name="padding_tiny">8dp</dimen>
+
+  <!--Radius-->
+  <dimen name="radius_small">16dp</dimen>
+
   <!--Dimensions related to views-->
   <dimen name="height_thumbnail">200dp</dimen>
   <dimen name="clearance_image_item">1dp</dimen>
-  <dimen name="radius_small">16dp</dimen>
+  <dimen name="error_image_view_height">300dp</dimen>
 </resources>

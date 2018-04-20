@@ -16,6 +16,11 @@ interface PhotoListFragmentView : LoadingView {
   fun showThumbnails(thumbnails: List<PhotoListAdapterItem>)
 
   /**
+   * Resets the state of the view.
+   */
+  fun resetState()
+
+  /**
    * Adds an item into a list of thumbnails that shows some progress of loading.
    */
   fun addLoadingItem()
@@ -33,7 +38,27 @@ interface PhotoListFragmentView : LoadingView {
   fun showNextPageThumbnails(thumbnails: List<PhotoListAdapterItem>)
 
   /**
-   * Shows an error that occurred while fetching a new page of thumbnails.
+   * Handles a network error that occurred while fetching the first page of thumbnails.
    */
-  fun showNextPageError()
+  fun onFirstPageNetworkError()
+
+  /**
+   * Handles a network error that occurred while fetching a new page of thumbnails.
+   */
+  fun onNextPageNetworkError()
+
+  /**
+   * Handles an empty response when fetching the first page of thumbnails.
+   */
+  fun onFirstPageEmptyResponseError()
+
+  /**
+   * Handles an empty response when fetching a new page of thumbnails.
+   */
+  fun onNextPageEmptyResponseError()
+
+  /**
+   * Hides any error that is currently visible on the screen.
+   */
+  fun hideAnyVisibleError()
 }

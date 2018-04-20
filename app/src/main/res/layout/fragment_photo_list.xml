@@ -37,4 +37,27 @@
 
   </android.support.v4.widget.SwipeRefreshLayout>
 
+  <lz.renatkaitmazov.flickrviewer.base.customview.ErrorView
+    android:id="@+id/noConnectionErrorView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    app:errorImageSrc="@drawable/img_no_connection"
+    app:errorTitleText="@string/error_no_connection"
+    app:errorDescriptionText="@string/description_no_connection"
+    app:errorButtonText="@string/title_retry"
+    android:background="@android:color/white"
+    android:visibility="gone"/>
+
+  <lz.renatkaitmazov.flickrviewer.base.customview.ErrorView
+    android:id="@+id/noResultsErrorView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    app:errorImageSrc="@drawable/img_no_results"
+    app:errorTitleText="@string/error_no_results"
+    app:errorButtonText="@string/title_update"
+    android:background="@android:color/white"
+    android:visibility="gone"/>
+
 </android.support.design.widget.CoordinatorLayout>

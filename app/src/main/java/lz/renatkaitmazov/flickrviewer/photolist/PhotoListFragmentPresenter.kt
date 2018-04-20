@@ -55,22 +55,20 @@ class PhotoListFragmentPresenter(
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe { view?.addLoadingItem() }
       .map(mapper::map)
-      .subscribe({
-        val view = this.view
-        if (view != null) {
-          if (it.isEmpty()) {
-            view.onNextPageEmptyResponseError()
-            return@subscribe
+      .subscribe({ response ->
+        ifViewNotNull {
+          if (response.isEmpty()) {
+            it.onNextPageEmptyResponseError()
+            return@ifViewNotNull
           }
-          view.removeLoadingItem()
-          view.showNextPageThumbnails(it)
+          it.removeLoadingItem()
+          it.showNextPageThumbnails(response)
         }
       }, { error ->
         Timber.e(error)
-        val view = this.view
-        if (view != null) {
-          view.removeLoadingItem()
-          view.onNextPageNetworkError()
+        ifViewNotNull {
+          it.removeLoadingItem()
+          it.onNextPageNetworkError()
         }
       })
     subscriptionManager.add(nextPageDisposable)

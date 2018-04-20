@@ -19,5 +19,5 @@
   <string name="title_update">Update</string>
 
   <!--Descriptions-->
-  <string name="description_no_connection">You are not connected to the Internet.\nMake sure you have Internet connection and retry again.</string>
+  <string name="description_no_connection">You are not connected to the Internet.\nMake sure you have Internet connection and retry.</string>
 </resources>

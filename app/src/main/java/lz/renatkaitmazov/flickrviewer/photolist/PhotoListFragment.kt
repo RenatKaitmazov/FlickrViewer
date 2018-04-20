@@ -164,7 +164,8 @@ class PhotoListFragment
     // Need to decrement the current page because the attempt to load a new page was not
     // successful.
     --currentPage
-    showLongToast(R.string.error_when_loading)
+    paginator.loadingCompleted()
+    showLongToast(R.string.error_no_connection)
   }
 
   override fun onFirstPageEmptyResponseError() {

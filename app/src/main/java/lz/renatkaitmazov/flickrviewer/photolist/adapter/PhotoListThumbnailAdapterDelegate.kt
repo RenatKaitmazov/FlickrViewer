@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import lz.renatkaitmazov.flickrviewer.R
 import lz.renatkaitmazov.flickrviewer.base.adapter.AdapterDelegate
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
@@ -35,7 +37,12 @@ class PhotoListThumbnailAdapterDelegate(
     val holder = viewHolder as PhotoListThumbnailViewHolder
     val item = items[position] as PhotoListThumbnailItem
     Glide.with(context)
+      .setDefaultRequestOptions(
+        RequestOptions()
+          .placeholder(R.drawable.ic_image_placeholder)
+      )
       .load(item.thumbnailUrl)
+      .transition(DrawableTransitionOptions.withCrossFade())
       .into(holder.thumbnailImageView)
   }
 }

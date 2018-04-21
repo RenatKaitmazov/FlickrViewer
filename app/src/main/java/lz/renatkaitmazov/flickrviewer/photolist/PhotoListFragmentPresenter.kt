@@ -74,6 +74,10 @@ class PhotoListFragmentPresenter(
     subscriptionManager.add(nextPageDisposable)
   }
 
+  override fun onToolbarDoubleTap() {
+    view?.scrollToFirstItem()
+  }
+
   private fun handleFirstPageSuccess(response: List<PhotoListAdapterItem>) {
     ifViewNotNull {
       if (response.isEmpty()) {

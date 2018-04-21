@@ -61,4 +61,9 @@ interface PhotoListFragmentView : LoadingView {
    * Hides any error that is currently visible on the screen.
    */
   fun hideAnyVisibleError()
+
+  /**
+   * Scrolls the list of thumbnails to the very first item.
+   */
+  fun scrollToFirstItem()
 }

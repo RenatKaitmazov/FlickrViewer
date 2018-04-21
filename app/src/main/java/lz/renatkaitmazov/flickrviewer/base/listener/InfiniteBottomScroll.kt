@@ -1,4 +1,4 @@
-package lz.renatkaitmazov.flickrviewer.photolist.adapter
+package lz.renatkaitmazov.flickrviewer.base.listener
 
 import android.support.v7.widget.RecyclerView
 

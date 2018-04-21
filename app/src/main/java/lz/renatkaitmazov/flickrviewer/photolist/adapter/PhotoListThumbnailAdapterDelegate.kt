@@ -36,11 +36,10 @@ class PhotoListThumbnailAdapterDelegate(
                                 viewHolder: RecyclerView.ViewHolder) {
     val holder = viewHolder as PhotoListThumbnailViewHolder
     val item = items[position] as PhotoListThumbnailItem
+    val requestOptions = RequestOptions()
+      .placeholder(R.drawable.ic_image_placeholder)
     Glide.with(context)
-      .setDefaultRequestOptions(
-        RequestOptions()
-          .placeholder(R.drawable.ic_image_placeholder)
-      )
+      .setDefaultRequestOptions(requestOptions)
       .load(item.thumbnailUrl)
       .transition(DrawableTransitionOptions.withCrossFade())
       .into(holder.thumbnailImageView)

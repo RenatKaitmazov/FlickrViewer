@@ -27,4 +27,9 @@ interface IPhotoListFragmentPresenter : Presenter<PhotoListFragmentView> {
    * @param page
    */
   fun getNextPage(page: Int)
+
+  /**
+   * This method gets triggered when the user taps toolbar two times in a row.
+   */
+  fun onToolbarDoubleTap()
 }

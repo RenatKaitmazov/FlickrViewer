@@ -171,7 +171,12 @@ class PhotoListFragment
   }
 
   override fun onFirstPageNetworkError() {
-    noConnectionErrorView.show()
+    if (photoListAdapter.isEmpty()) {
+      noConnectionErrorView.show()
+    } else {
+      // Do not hide the current content if there is no Internet connection.
+      showLongToast(R.string.error_no_connection)
+    }
   }
 
   override fun onNextPageNetworkError() {

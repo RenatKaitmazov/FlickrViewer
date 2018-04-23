@@ -113,4 +113,11 @@ class PhotoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
     items.removeAt(items.lastIndex)
     notifyItemRemoved(items.lastIndex)
   }
+
+  /**
+   * Checks to see if this adapter is empty or not.
+   *
+   * @return true if the adapter has no items in it, false otherwise.
+   */
+  fun isEmpty(): Boolean = items.size == 0
 }

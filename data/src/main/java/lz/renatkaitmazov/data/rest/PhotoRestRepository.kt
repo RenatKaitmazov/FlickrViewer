@@ -1,6 +1,7 @@
 package lz.renatkaitmazov.data.rest
 
 import io.reactivex.Single
+import io.reactivex.SingleEmitter
 import lz.renatkaitmazov.data.cache.Cache
 import lz.renatkaitmazov.data.device.IConnectivityChecker
 import lz.renatkaitmazov.data.exception.NoInternetConnectionException
@@ -60,22 +61,34 @@ class PhotoRestRepository(
             if (!emitter.isDisposed) {
               emitter.onSuccess(it)
             }
-          }, {error ->
-            if (!emitter.isDisposed) {
-              emitter.onError(error)
-            }
-          })
+          }, { error -> handleError(emitter, error) })
       } catch (error: Throwable) {
-        if (!emitter.isDisposed) {
-          emitter.onError(error)
-        }
+        handleError(emitter, error)
       }
     }
   }
 
   override fun updatePhotoList(): Single<List<RecentPhotoEntity>> {
-    invalidateCache()
-    return getRecentPhotosAtFirstPage()
+    return Single.create { emitter ->
+      if (emitter.isDisposed) {
+        return@create
+      }
+      try {
+        loadRecentPhotos(1)
+          .subscribe({
+            // Invalidate the cache only if the server responded successfully.
+            invalidateCache()
+            cache.put(KEY_PHOTO_REST_REPOSITORY, it as MutableList<RecentPhotoEntity>)
+            if (!emitter.isDisposed) {
+              emitter.onSuccess(it)
+            }
+          }, { error ->
+            handleError(emitter, error)
+          })
+      } catch (error: Throwable) {
+        handleError(emitter, error)
+      }
+    }
   }
 
   override fun getNextPage(page: Int): Single<List<RecentPhotoEntity>> {
@@ -92,11 +105,7 @@ class PhotoRestRepository(
           if (!emitter.isDisposed) {
             emitter.onSuccess(it)
           }
-        }, {error ->
-          if (!emitter.isDisposed) {
-            emitter.onError(error)
-          }
-        })
+        }, { error -> handleError(emitter, error) })
     }
   }
 
@@ -127,5 +136,11 @@ class PhotoRestRepository(
       .filter { it.originalImageUrl!!.isNotBlank() }
       .toList()
       .map(mapper::map)
+  }
+
+  private fun handleError(emitter: SingleEmitter<*>, error: Throwable) {
+    if (!emitter.isDisposed) {
+      emitter.onError(error)
+    }
   }
 }

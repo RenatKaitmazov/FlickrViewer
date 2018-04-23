@@ -18,7 +18,9 @@ import lz.renatkaitmazov.flickrviewer.photolist.adapter.DividerDecoration
 import lz.renatkaitmazov.flickrviewer.base.listener.InfiniteBottomScroll
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListAdapter
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListItemAnimator
+import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListThumbnailViewHolder
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
+import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListThumbnailItem
 import javax.inject.Inject
 
 /**
@@ -30,7 +32,8 @@ class PhotoListFragment
   PhotoListFragmentView,
   SwipeRefreshLayout.OnRefreshListener,
   InfiniteBottomScroll.Callback,
-  DoubleTapDetector.DoubleTapListener {
+  DoubleTapDetector.DoubleTapListener,
+  PhotoListThumbnailViewHolder.OnThumbnailClickListener {
 
   companion object {
     /**
@@ -110,7 +113,7 @@ class PhotoListFragment
   }
 
   private fun initRecyclerView() {
-    photoListAdapter = PhotoListAdapter(activity as Context)
+    photoListAdapter = PhotoListAdapter(activity as Context, this)
     photoListRecyclerView.setHasFixedSize(true)
     photoListRecyclerView.adapter = photoListAdapter
     photoListRecyclerView.itemAnimator = PhotoListItemAnimator()
@@ -241,5 +244,10 @@ class PhotoListFragment
       }
       else -> false
     }
+  }
+
+  override fun onThumbnailClicked(item: PhotoListThumbnailItem) {
+    // TODO Open a detail activity
+    showLongToast(item.toString())
   }
 }

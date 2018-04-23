@@ -20,7 +20,8 @@ class PhotoListAdapterItemMapper : Mapper<List<RecentPhotoEntity>, List<PhotoLis
   private fun map(entity: RecentPhotoEntity): PhotoListAdapterItem {
     return PhotoListThumbnailItem(
       entity.id,
-      entity.thumbnailUrl
+      entity.thumbnailUrl,
+      entity.mediumSizeImageUrl
     )
   }
 }

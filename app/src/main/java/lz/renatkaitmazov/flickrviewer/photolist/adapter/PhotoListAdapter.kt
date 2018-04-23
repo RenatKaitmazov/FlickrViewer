@@ -39,8 +39,9 @@ class PhotoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
    */
   private val delegates = HashMap<Int, AdapterDelegate<List<PhotoListAdapterItem>>>()
 
-  constructor(ctx: Context) {
-    delegates[TYPE_THUMBNAIL_ITEM] = PhotoListThumbnailAdapterDelegate(ctx)
+  constructor(ctx: Context,
+              thumbnailClickListener: PhotoListThumbnailViewHolder.OnThumbnailClickListener?) {
+    delegates[TYPE_THUMBNAIL_ITEM] = PhotoListThumbnailAdapterDelegate(ctx, thumbnailClickListener)
     delegates[TYPE_LOADING_ITEM] = PhotoListLoadingAdapterDelegate(ctx)
   }
 

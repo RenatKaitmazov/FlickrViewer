@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<ImageView
   xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/thumbnailImageView"
   android:layout_width="match_parent"
   android:layout_height="@dimen/height_thumbnail"
-  android:background="?attr/selectableItemBackground">
-
-  <ImageView
-    android:id="@+id/thumbnailImageView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scaleType="centerCrop"
-    android:src="@drawable/ic_image_placeholder"/>
-  
-</FrameLayout>
+  android:scaleType="centerCrop"
+  android:foreground="?android:attr/selectableItemBackground"/>

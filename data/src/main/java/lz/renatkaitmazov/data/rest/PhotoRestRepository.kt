@@ -41,6 +41,10 @@ class PhotoRestRepository(
 
   private val photoRestApi = retrofit.create(PhotoRestApi::class.java)
 
+  /*------------------------------------------------------------------------*/
+  /* IPhotoRestRepository implementation                                    */
+  /*------------------------------------------------------------------------*/
+
   override fun getRecentPhotosAtFirstPage(): Single<List<RecentPhotoEntity>> {
     return Single.create { emitter ->
       if (emitter.isDisposed) {
@@ -108,6 +112,10 @@ class PhotoRestRepository(
         }, { error -> handleError(emitter, error) })
     }
   }
+
+  /*------------------------------------------------------------------------*/
+  /* Helper Methods                                                         */
+  /*------------------------------------------------------------------------*/
 
   private fun invalidateCache() {
     cache.remove(KEY_PHOTO_REST_REPOSITORY)

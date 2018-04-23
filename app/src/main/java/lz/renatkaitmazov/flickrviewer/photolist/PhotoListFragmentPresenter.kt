@@ -27,6 +27,10 @@ class PhotoListFragmentPresenter(
 ) : BasePresenter<PhotoListFragmentView>(view, subscriptionManager),
   IPhotoListFragmentPresenter {
 
+  /*------------------------------------------------------------------------*/
+  /* IPhotoListFragmentPresenter implementation                             */
+  /*------------------------------------------------------------------------*/
+
   override fun getPhotoListAtFirstPage() {
     val getListDisposable = repository.getPhotoListAtFirstPage()
       .subscribeOn(Schedulers.io())
@@ -77,6 +81,10 @@ class PhotoListFragmentPresenter(
   override fun onToolbarDoubleTap() {
     view?.scrollToFirstItem()
   }
+
+  /*------------------------------------------------------------------------*/
+  /* Helper Methods                                                         */
+  /*------------------------------------------------------------------------*/
 
   private fun handleFirstPageSuccess(response: List<PhotoListAdapterItem>) {
     ifViewNotNull {

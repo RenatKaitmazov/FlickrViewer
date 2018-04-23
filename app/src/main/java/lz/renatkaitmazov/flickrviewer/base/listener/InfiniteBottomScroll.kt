@@ -47,7 +47,7 @@ class InfiniteBottomScroll(private val callback: Callback) : RecyclerView.OnScro
   /**
    * Must be called by the client when [Callback.loadMode] completes its work.
    */
-  fun loadingCompleted() {
+  fun onNextPageLoaded() {
     isLoading = false
   }
 }

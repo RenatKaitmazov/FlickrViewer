@@ -30,6 +30,27 @@ class PhotoListThumbnailViewHolder(
     fun onThumbnailClicked(item: PhotoListThumbnailItem)
   }
 
+  companion object {
+
+    /**
+     * Contains an image placeholder which is displayed until an actual image is loaded.
+     * Since the placeholder is the same for every image, it is initialized as a static field to
+     * be memory efficient.
+     */
+    @JvmStatic
+    private val REQUEST_OPTIONS = RequestOptions()
+      .placeholder(R.drawable.ic_image_placeholder)
+
+    /**
+     * A cross fade animation which is played when the image placeholder is replaced by an actual
+     * image.
+     * Created as a static field to be memory efficient.
+     */
+    @JvmStatic
+    private val CROSS_FADE_ANIM = DrawableTransitionOptions.withCrossFade()
+
+  }
+
   init {
     view.setOnClickListener(this)
   }
@@ -53,12 +74,10 @@ class PhotoListThumbnailViewHolder(
    */
   fun bind(context: Context, item: PhotoListThumbnailItem) {
     this.item = item
-    val requestOptions = RequestOptions()
-      .placeholder(R.drawable.ic_image_placeholder)
     Glide.with(context)
-      .setDefaultRequestOptions(requestOptions)
+      .setDefaultRequestOptions(REQUEST_OPTIONS)
       .load(item.thumbnailUrl)
-      .transition(DrawableTransitionOptions.withCrossFade())
+      .transition(CROSS_FADE_ANIM)
       .into(thumbnailImageView)
   }
 

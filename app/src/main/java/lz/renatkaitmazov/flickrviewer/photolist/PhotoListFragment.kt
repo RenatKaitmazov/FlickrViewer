@@ -1,11 +1,11 @@
 package lz.renatkaitmazov.flickrviewer.photolist
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager.SavedState as GridLayoutState
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
@@ -50,6 +50,21 @@ class PhotoListFragment
      * A handy factory method to create instances of this class.
      */
     fun newInstance(): PhotoListFragment = PhotoListFragment()
+
+    /**
+     * A key for [currentPage].
+     */
+    private const val KEY_BUNDLE_PAGE = "KEY_BUNDLE_PAGE"
+
+    /**
+     * A key for [serverHasMoreData].
+     */
+    private const val KEY_BUNDLE_HAS_MORE_DATA = "KEY_BUNDLE_HAS_MORE_DATA"
+
+    /**
+     * A key for the scroll position of [photoListRecyclerView].
+     */
+    private const val KEY_BUNDLE_LAYOUT_STATE = "KEY_BUNDLE_LAYOUT_STATE"
   }
 
   /**
@@ -68,19 +83,31 @@ class PhotoListFragment
   @Inject
   lateinit var presenter: IPhotoListFragmentPresenter
 
+  /*------------------------------------------------------------------------*/
+  /* Fragment Lifecycle Events                                              */
+  /*------------------------------------------------------------------------*/
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setHasOptionsMenu(true)
+    photoListAdapter = PhotoListAdapter(app, this)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     initGestureDetector()
     initToolbar()
     initRefreshLayout()
-    initRecyclerView()
+    initRecyclerView(savedInstanceState)
     initNoConnectionErrorView()
     initNoResultsErrorView()
     presenter.getPhotoListAtFirstPage()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    outState.putInt(KEY_BUNDLE_PAGE, currentPage)
+    outState.putBoolean(KEY_BUNDLE_HAS_MORE_DATA, serverHasMoreData)
+    val layoutState = photoListRecyclerView.layoutManager.onSaveInstanceState()
+    outState.putParcelable(KEY_BUNDLE_LAYOUT_STATE, layoutState)
   }
 
   override fun onDestroy() {
@@ -88,63 +115,23 @@ class PhotoListFragment
     super.onDestroy()
   }
 
+  /*------------------------------------------------------------------------*/
+  /* Parent Abstract Methods                                                */
+  /*------------------------------------------------------------------------*/
+
   override fun getViewResId() = R.layout.fragment_photo_list
 
-  private fun initToolbar() {
-    toolbar.setOnTouchListener(View.OnTouchListener { _, event ->
-      return@OnTouchListener gestureDetector.onTouchEvent(event)
-    })
-    toolbar.setTitle(R.string.title_recent_photos)
-    val hostActivity = activity as? AppCompatActivity
-    hostActivity?.setSupportActionBar(toolbar)
-    if (supportsMaterialDesign()) {
-      val toolbarElevation = resources.getDimension(R.dimen.elevation_4dp)
-      toolbar.elevation = toolbarElevation
-    }
-  }
-
-  private fun initRefreshLayout() {
-    photoListRefreshLayout.setOnRefreshListener(this)
-    photoListRefreshLayout.setColorSchemeResources(
-      android.R.color.holo_red_light,
-      android.R.color.holo_orange_light,
-      android.R.color.holo_blue_bright
-    )
-  }
-
-  private fun initRecyclerView() {
-    photoListAdapter = PhotoListAdapter(activity as Context, this)
-    photoListRecyclerView.setHasFixedSize(true)
-    photoListRecyclerView.adapter = photoListAdapter
-    photoListRecyclerView.itemAnimator = PhotoListItemAnimator()
-    val spanCount = resources.getInteger(R.integer.span_count)
-    photoListRecyclerView.layoutManager = GridLayoutManager(activity, spanCount)
-    val clearance = resources.getDimension(R.dimen.clearance_image_item).toInt()
-    val dividerDecoration = DividerDecoration(clearance, spanCount)
-    photoListRecyclerView.addItemDecoration(dividerDecoration)
-    photoListRecyclerView.addOnScrollListener(paginator)
-  }
-
-  private fun initNoConnectionErrorView() {
-    noConnectionErrorView.setOnErrorButtonClickListener(View.OnClickListener {
-      presenter.updatePhotoList()
-    })
-  }
-
-  private fun initNoResultsErrorView() {
-    noResultsErrorView.setOnErrorButtonClickListener(View.OnClickListener {
-      presenter.updatePhotoList()
-    })
-  }
-
-  private fun initGestureDetector() {
-    val doubleTapDetector = DoubleTapDetector(this, R.id.toolbar)
-    gestureDetector = GestureDetectorCompat(app, doubleTapDetector)
-  }
+  /*------------------------------------------------------------------------*/
+  /* Menu                                                                   */
+  /*------------------------------------------------------------------------*/
 
   override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
     inflater.inflate(R.menu.menu_photo_list, menu)
   }
+
+  /*------------------------------------------------------------------------*/
+  /* PhotoListFragmentView implementation                                   */
+  /*------------------------------------------------------------------------*/
 
   override fun showProgress() {
     photoListRefreshLayout.isRefreshing = true
@@ -152,10 +139,6 @@ class PhotoListFragment
 
   override fun hideProgress() {
     photoListRefreshLayout.isRefreshing = false
-  }
-
-  override fun onRefresh() {
-    presenter.updatePhotoList()
   }
 
   override fun showThumbnails(thumbnails: List<PhotoListAdapterItem>) {
@@ -183,7 +166,7 @@ class PhotoListFragment
     // Need to decrement the current page because the attempt to load a new page was not
     // successful.
     --currentPage
-    paginator.loadingCompleted()
+    paginator.onNextPageLoaded()
     showLongToast(R.string.error_no_connection)
   }
 
@@ -203,7 +186,7 @@ class PhotoListFragment
 
   override fun showNextPageThumbnails(thumbnails: List<PhotoListAdapterItem>) {
     photoListAdapter.append(thumbnails)
-    paginator.loadingCompleted()
+    paginator.onNextPageLoaded()
   }
 
   override fun resetState() {
@@ -228,6 +211,18 @@ class PhotoListFragment
     photoListRecyclerView.smoothScrollToPosition(firstItemPosition)
   }
 
+  /*------------------------------------------------------------------------*/
+  /* SwipeRefreshLayout.OnRefreshListener implementation                    */
+  /*------------------------------------------------------------------------*/
+
+  override fun onRefresh() {
+    presenter.updatePhotoList()
+  }
+
+  /*------------------------------------------------------------------------*/
+  /* InfiniteBottomScroll.Callback implementation                           */
+  /*------------------------------------------------------------------------*/
+
   override fun canLoadMore(): Boolean {
     val layoutManager = photoListRecyclerView.layoutManager as GridLayoutManager
     val totalItemCount = layoutManager.itemCount
@@ -241,6 +236,10 @@ class PhotoListFragment
     presenter.getNextPage(++currentPage)
   }
 
+  /*------------------------------------------------------------------------*/
+  /* DoubleTapDetector.DoubleTapListener implementation                     */
+  /*------------------------------------------------------------------------*/
+
   override fun onDoubleTaped(viewId: Int): Boolean {
     return when (viewId) {
       R.id.toolbar -> {
@@ -251,8 +250,77 @@ class PhotoListFragment
     }
   }
 
+  /*------------------------------------------------------------------------*/
+  /* PhotoListThumbnailViewHolder.OnThumbnailClickListener implementation   */
+  /*------------------------------------------------------------------------*/
+
   override fun onThumbnailClicked(item: PhotoListThumbnailItem) {
     // TODO Open a detail activity
     showLongToast(item.toString())
+  }
+
+  /*------------------------------------------------------------------------*/
+  /* Helper Methods                                                         */
+  /*------------------------------------------------------------------------*/
+
+  private fun initToolbar() {
+    toolbar.setOnTouchListener(View.OnTouchListener { _, event ->
+      return@OnTouchListener gestureDetector.onTouchEvent(event)
+    })
+    toolbar.setTitle(R.string.title_recent_photos)
+    val hostActivity = activity as? AppCompatActivity
+    hostActivity?.setSupportActionBar(toolbar)
+    if (supportsMaterialDesign()) {
+      val toolbarElevation = resources.getDimension(R.dimen.elevation_4dp)
+      toolbar.elevation = toolbarElevation
+    }
+  }
+
+  private fun initRefreshLayout() {
+    photoListRefreshLayout.setOnRefreshListener(this)
+    photoListRefreshLayout.setColorSchemeResources(
+      android.R.color.holo_red_light,
+      android.R.color.holo_orange_light,
+      android.R.color.holo_blue_bright
+    )
+  }
+
+  private fun initRecyclerView(savedInstanceState: Bundle?) {
+    photoListRecyclerView.adapter = photoListAdapter
+    photoListRecyclerView.setHasFixedSize(true)
+    photoListRecyclerView.itemAnimator = PhotoListItemAnimator()
+    val spanCount = resources.getInteger(R.integer.span_count)
+    photoListRecyclerView.layoutManager = GridLayoutManager(app, spanCount)
+    val clearance = resources.getDimension(R.dimen.clearance_image_item).toInt()
+    val dividerDecoration = DividerDecoration(clearance, spanCount)
+    photoListRecyclerView.addItemDecoration(dividerDecoration)
+    photoListRecyclerView.addOnScrollListener(paginator)
+    restoreRecyclerViewState(savedInstanceState)
+  }
+
+  private fun restoreRecyclerViewState(savedInstanceState: Bundle?) {
+    if (savedInstanceState != null) {
+      currentPage = savedInstanceState.getInt(KEY_BUNDLE_PAGE, 1)
+      serverHasMoreData = savedInstanceState.getBoolean(KEY_BUNDLE_HAS_MORE_DATA, true)
+      val layoutState = savedInstanceState.getParcelable(KEY_BUNDLE_LAYOUT_STATE) as GridLayoutState
+      photoListRecyclerView.layoutManager.onRestoreInstanceState(layoutState)
+    }
+  }
+
+  private fun initNoConnectionErrorView() {
+    noConnectionErrorView.setOnErrorButtonClickListener(View.OnClickListener {
+      presenter.updatePhotoList()
+    })
+  }
+
+  private fun initNoResultsErrorView() {
+    noResultsErrorView.setOnErrorButtonClickListener(View.OnClickListener {
+      presenter.updatePhotoList()
+    })
+  }
+
+  private fun initGestureDetector() {
+    val doubleTapDetector = DoubleTapDetector(this, R.id.toolbar)
+    gestureDetector = GestureDetectorCompat(app, doubleTapDetector)
   }
 }

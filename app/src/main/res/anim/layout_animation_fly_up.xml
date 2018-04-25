@@ -3,5 +3,5 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:animation="@anim/item_animation_fly_up"
   android:interpolator="@android:anim/decelerate_interpolator"
-  android:delay="15%"
+  android:delay="5%"
   android:animationOrder="normal"/>

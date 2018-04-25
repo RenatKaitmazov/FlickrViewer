@@ -2,5 +2,7 @@
 <resources>
   <!--The number of columns when displaying images in a grid layout-->
   <integer name="span_count">2</integer>
+  <integer name="anim_duration_very_short">50</integer>
+  <integer name="anim_duration_short">100</integer>
   <integer name="anim_duration_medium">300</integer>
 </resources>

@@ -56,8 +56,11 @@
       app:layout_constraintStart_toStartOf="parent"
       android:layout_marginTop="@dimen/margin_small"
       android:layout_marginEnd="@dimen/margin_tiny"
-      android:layout_marginBottom="@dimen/margin_tiny"
+      android:layout_marginBottom="@dimen/margin_small"
       android:layout_marginStart="@dimen/margin_tiny"
+      android:background="@drawable/ripple_gray"
+      android:stateListAnimator="@animator/selector_lift_up"
+      android:elevation="@dimen/elevation_2dp"
       tools:text="Retry"/>
 
   </android.support.constraint.ConstraintLayout>

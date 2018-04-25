@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Elevation-->
+  <dimen name="elevation_2dp">2dp</dimen>
   <dimen name="elevation_4dp">4dp</dimen>
 
   <!--Margin-->
@@ -12,6 +13,9 @@
 
   <!--Radius-->
   <dimen name="radius_small">16dp</dimen>
+
+  <!--Stroke-->
+  <dimen name="stroke_tiny">1dp</dimen>
 
   <!--Dimensions related to views-->
   <dimen name="height_thumbnail">200dp</dimen>

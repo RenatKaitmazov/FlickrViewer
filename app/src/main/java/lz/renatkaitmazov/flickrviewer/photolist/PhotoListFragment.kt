@@ -1,5 +1,6 @@
 package lz.renatkaitmazov.flickrviewer.photolist
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v4.widget.SwipeRefreshLayout
@@ -16,6 +17,7 @@ import lz.renatkaitmazov.flickrviewer.base.listener.DoubleTapDetector
 import lz.renatkaitmazov.flickrviewer.base.showLongToast
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.DividerDecoration
 import lz.renatkaitmazov.flickrviewer.base.listener.InfiniteBottomScroll
+import lz.renatkaitmazov.flickrviewer.photodetail.PhotoDetailActivity
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListAdapter
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListItemAnimator
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListThumbnailViewHolder
@@ -255,8 +257,8 @@ class PhotoListFragment
   /*------------------------------------------------------------------------*/
 
   override fun onThumbnailClicked(item: PhotoListThumbnailItem) {
-    // TODO Open a detail activity
-    showLongToast(item.toString())
+    val activityIntent = PhotoDetailActivity.newIntent(app, item.mediumSizeImageUrl)
+    startActivity(activityIntent)
   }
 
   /*------------------------------------------------------------------------*/

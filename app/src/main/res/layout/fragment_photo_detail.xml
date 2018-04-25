@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <!--It's color is changed in code to be black-->
+  <include
+    android:id="@+id/includedToolbar"
+    layout="@layout/toolbar" />
+
+  <ImageView
+    android:id="@+id/photoDetailImageView"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintTop_toBottomOf="@id/includedToolbar"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:scaleType="fitCenter"
+    android:background="@android:color/black"/>
+
+</android.support.constraint.ConstraintLayout>

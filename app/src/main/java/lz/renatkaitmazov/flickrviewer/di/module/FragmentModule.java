@@ -3,6 +3,7 @@ package lz.renatkaitmazov.flickrviewer.di.module;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import lz.renatkaitmazov.flickrviewer.di.scope.FragmentScope;
+import lz.renatkaitmazov.flickrviewer.photodetail.PhotoDetailFragment;
 import lz.renatkaitmazov.flickrviewer.photolist.PhotoListFragment;
 
 /**
@@ -18,4 +19,8 @@ public interface FragmentModule {
   @FragmentScope
   @ContributesAndroidInjector(modules = {PresenterModule.class})
   PhotoListFragment photoListFragmentInjection();
+
+  @FragmentScope
+  @ContributesAndroidInjector(modules = {})
+  PhotoDetailFragment photoDetailFragmentInjector();
 }

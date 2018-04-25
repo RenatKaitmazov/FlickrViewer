@@ -18,6 +18,12 @@
       </intent-filter>
     </activity>
 
+    <activity android:name=".photodetail.PhotoDetailActivity">
+      <intent-filter>
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+
   </application>
 
 </manifest>

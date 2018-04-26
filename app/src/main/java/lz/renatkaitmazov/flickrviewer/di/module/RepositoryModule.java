@@ -1,5 +1,7 @@
 package lz.renatkaitmazov.flickrviewer.di.module;
 
+import android.content.Context;
+
 import javax.inject.Named;
 
 import dagger.Module;
@@ -25,8 +27,9 @@ public final class RepositoryModule {
 
   @Provides
   @FragmentScope
-  static IPhotoRepository providePhotoRepository(IPhotoRestRepository restRepository) {
-    return new PhotoRepository(restRepository);
+  static IPhotoRepository providePhotoRepository(Context context,
+                                                 IPhotoRestRepository restRepository) {
+    return new PhotoRepository(context, restRepository);
   }
 
   @Provides

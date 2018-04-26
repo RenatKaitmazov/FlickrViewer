@@ -6,19 +6,24 @@
 
   <!--Menu items titles-->
   <string name="menu_title_search">Поиск</string>
+  <string name="menu_title_share">Поделиться</string>
 
   <!--Hints-->
   <string name="hint_search_photos">Поиск фотографий</string>
 
   <!--Errors-->
+  <string name="error_general">Ошибка</string>
   <string name="error_when_loading">Возникла ошибка во время загрузки</string>
   <string name="error_no_connection">Нет соединения с сетью</string>
   <string name="error_no_results">Нет данных для отображения</string>
+  <string name="error_when_sharing_image">Возникла ошибка во время передачи изображения</string>
 
   <!--Titles-->
   <string name="title_retry">Повторить</string>
   <string name="title_update">Обновить</string>
+  <string name="title_share_via">Поделиться через</string>
 
   <!--Descriptions-->
   <string name="description_no_connection">Вы не подключены к интернету.\nУбедитесь, что у вас есть интернет соединение и повторите снова.</string>
+  <string name="description_no_app_to_share">На вашем устройстве нет приложений, которые могли бы передавать изображения. Пожалуйста, скачайте из Play Store</string>
 </resources>

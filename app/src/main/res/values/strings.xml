@@ -1,23 +1,30 @@
 <resources>
   <string name="app_name">FlickrViewer</string>
+  <string name="authority_img_provider">lz.renatkaitmazov.flickrviewer.fileprovider</string>
+  <string name="cache_subdirectory_name">images</string>
 
   <string name="title_recent_photos">Recent</string>
 
   <!--Menu items titles-->
   <string name="menu_title_search">Search</string>
+  <string name="menu_title_share">Share</string>
 
   <!--Hints-->
   <string name="hint_search_photos">Search photos</string>
 
   <!--Errors-->
+  <string name="error_general">Error</string>
   <string name="error_when_loading">Error occurred while loading</string>
   <string name="error_no_connection">No Internet connection</string>
   <string name="error_no_results">Nothing to show</string>
+  <string name="error_when_sharing_image">Error occurred while sharing an image</string>
 
   <!--Titles-->
   <string name="title_retry">Retry</string>
   <string name="title_update">Update</string>
+  <string name="title_share_via">Share via</string>
 
   <!--Descriptions-->
   <string name="description_no_connection">You are not connected to the Internet.\nMake sure you have Internet connection and retry.</string>
+  <string name="description_no_app_to_share">There is no app installed on your device that can share image. Please, visit Play Store and install one</string>
 </resources>

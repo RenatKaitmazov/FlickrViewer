@@ -21,6 +21,6 @@ public interface FragmentModule {
   PhotoListFragment photoListFragmentInjection();
 
   @FragmentScope
-  @ContributesAndroidInjector(modules = {})
+  @ContributesAndroidInjector(modules = {PresenterModule.class})
   PhotoDetailFragment photoDetailFragmentInjector();
 }

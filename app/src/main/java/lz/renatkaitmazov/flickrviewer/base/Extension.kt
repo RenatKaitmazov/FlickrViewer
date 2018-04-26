@@ -2,6 +2,7 @@ package lz.renatkaitmazov.flickrviewer.base
 
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
+import android.view.View
 import android.widget.Toast
 
 /**
@@ -28,4 +29,18 @@ fun Fragment.showLongToast(@StringRes stringResId: Int) {
  */
 fun Fragment.showLongToast(text: String) {
   Toast.makeText(activity, text, Toast.LENGTH_LONG).show()
+}
+
+/**
+ * Makes the view visible.
+ */
+fun View.makeVisible() {
+  visibility = View.VISIBLE
+}
+
+/**
+ * Makes the view invisible and removes itself from the parent's hierarchy.
+ */
+fun View.makeGone() {
+  visibility = View.GONE
 }

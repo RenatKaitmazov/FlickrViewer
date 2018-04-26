@@ -3,7 +3,8 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:background="@android:color/black">
 
   <!--It's color is changed in code to be black-->
   <include
@@ -18,7 +19,16 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    android:scaleType="fitCenter"
-    android:background="@android:color/black"/>
+    android:scaleType="fitCenter" />
+
+  <ProgressBar
+    android:id="@+id/progressBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/includedToolbar"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:visibility="gone" />
 
 </android.support.constraint.ConstraintLayout>

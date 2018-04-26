@@ -18,11 +18,26 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".photodetail.PhotoDetailActivity">
+    <activity
+      android:name=".photodetail.PhotoDetailActivity"
+      android:parentActivityName=".photolist.PhotoListActivity">
       <intent-filter>
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </activity>
+
+    <!--This provider allows the app to share images stored in the cache directory-->
+    <provider
+      android:name="android.support.v4.content.FileProvider"
+      android:authorities="@string/authority_img_provider"
+      android:grantUriPermissions="true"
+      android:exported="false">
+
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/filepaths" />
+
+    </provider>
 
   </application>
 

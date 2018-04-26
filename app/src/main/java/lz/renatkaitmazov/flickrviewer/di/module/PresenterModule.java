@@ -9,6 +9,9 @@ import lz.renatkaitmazov.data.DaggerConstantKt;
 import lz.renatkaitmazov.data.model.mapper.Mapper;
 import lz.renatkaitmazov.data.repository.IPhotoRepository;
 import lz.renatkaitmazov.flickrviewer.di.scope.FragmentScope;
+import lz.renatkaitmazov.flickrviewer.photodetail.IPhotoDetailFragmentPresenter;
+import lz.renatkaitmazov.flickrviewer.photodetail.PhotoDetailFragment;
+import lz.renatkaitmazov.flickrviewer.photodetail.PhotoDetailFragmentPresenter;
 import lz.renatkaitmazov.flickrviewer.photolist.IPhotoListFragmentPresenter;
 import lz.renatkaitmazov.flickrviewer.photolist.PhotoListFragment;
 import lz.renatkaitmazov.flickrviewer.photolist.PhotoListFragmentPresenter;
@@ -36,5 +39,16 @@ public final class PresenterModule {
     @Named(DaggerConstantKt.NAMED_FRG_PHOTO_LIST_ADAPTER_ITEM)
     Mapper mapper) {
     return new PhotoListFragmentPresenter(fragment, disposable, repository, mapper);
+  }
+
+  @Provides
+  @FragmentScope
+  static IPhotoDetailFragmentPresenter providePhotoDetailFragmentPresenter(
+    PhotoDetailFragment fragment,
+    @Named(DaggerConstantKt.NAMED_FRG_COMPOSITE_DISPOSABLE)
+    CompositeDisposable disposable,
+    IPhotoRepository repository
+  ) {
+    return new PhotoDetailFragmentPresenter(fragment, disposable, repository);
   }
 }

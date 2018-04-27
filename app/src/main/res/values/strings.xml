@@ -5,13 +5,14 @@
   <string name="transition_name_photo" translatable="false">transition_photo</string>
 
   <string name="title_recent_photos">Recent</string>
+  <string name="title_search">Search</string>
 
   <!--Menu items titles-->
   <string name="menu_title_search">Search</string>
   <string name="menu_title_share">Share</string>
 
   <!--Hints-->
-  <string name="hint_search_photos">Search photos</string>
+  <string name="hint_search_photos">Enter query</string>
 
   <!--Errors-->
   <string name="error_general">Error</string>
@@ -19,6 +20,7 @@
   <string name="error_no_connection">No Internet connection</string>
   <string name="error_no_results">Nothing to show</string>
   <string name="error_when_sharing_image">Error occurred while sharing an image</string>
+  <string name="error_short_query">Query must contain at least 3 characters</string>
 
   <!--Titles-->
   <string name="title_retry">Retry</string>

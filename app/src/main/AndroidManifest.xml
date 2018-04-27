@@ -26,6 +26,14 @@
       </intent-filter>
     </activity>
 
+    <activity
+      android:name=".search.SearchActivity"
+      android:windowSoftInputMode="stateVisible">
+      <intent-filter>
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+
     <!--This provider allows the app to share images stored in the cache directory-->
     <provider
       android:name="android.support.v4.content.FileProvider"

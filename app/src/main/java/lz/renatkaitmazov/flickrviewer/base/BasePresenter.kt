@@ -7,7 +7,7 @@ import io.reactivex.disposables.CompositeDisposable
  *
  * @author Renat Kaitmazov
  */
-abstract class BasePresenter<View : LoadingView>(
+abstract class BasePresenter<View : BaseView>(
   protected var view: View?,
   protected val subscriptionManager: CompositeDisposable
 ) : Presenter<View> {

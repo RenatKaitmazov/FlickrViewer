@@ -1,14 +1,18 @@
 package lz.renatkaitmazov.flickrviewer.photolist
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.LinearLayoutManager.SavedState as GridLayoutState
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_photo_list.*
 import lz.renatkaitmazov.flickrviewer.R
@@ -23,6 +27,7 @@ import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListItemAnimator
 import lz.renatkaitmazov.flickrviewer.photolist.adapter.PhotoListThumbnailViewHolder
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItem
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListThumbnailItem
+import lz.renatkaitmazov.flickrviewer.search.SearchActivity
 import javax.inject.Inject
 
 /**
@@ -49,11 +54,6 @@ class PhotoListFragment
     private const val ITEMS_THRESHOLD = 6
 
     /**
-     * A handy factory method to create instances of this class.
-     */
-    fun newInstance(): PhotoListFragment = PhotoListFragment()
-
-    /**
      * A key for [currentPage].
      */
     private const val KEY_BUNDLE_PAGE = "KEY_BUNDLE_PAGE"
@@ -67,6 +67,13 @@ class PhotoListFragment
      * A key for the scroll position of [photoListRecyclerView].
      */
     private const val KEY_BUNDLE_LAYOUT_STATE = "KEY_BUNDLE_LAYOUT_STATE"
+
+    private const val REQUEST_CODE_SEARCH_ACTIVITY = 1_000
+
+    /**
+     * A handy factory method to create instances of this class.
+     */
+    fun newInstance(): PhotoListFragment = PhotoListFragment()
   }
 
   /**
@@ -112,6 +119,18 @@ class PhotoListFragment
     outState.putParcelable(KEY_BUNDLE_LAYOUT_STATE, layoutState)
   }
 
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    when (requestCode) {
+      REQUEST_CODE_SEARCH_ACTIVITY -> {
+        if (resultCode == RESULT_OK && data != null) {
+          val query = data.getStringExtra(Intent.EXTRA_TEXT)
+          // TODO Start searching
+          showLongToast(query)
+        }
+      }
+    }
+  }
+
   override fun onDestroy() {
     presenter.unbind()
     super.onDestroy()
@@ -129,6 +148,13 @@ class PhotoListFragment
 
   override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
     inflater.inflate(R.menu.menu_photo_list, menu)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    return when (item.itemId) {
+      R.id.menu_item_search -> startSearchActivity()
+      else -> super.onOptionsItemSelected(item)
+    }
   }
 
   /*------------------------------------------------------------------------*/
@@ -334,5 +360,19 @@ class PhotoListFragment
   private fun initGestureDetector() {
     val doubleTapDetector = DoubleTapDetector(this, R.id.toolbar)
     gestureDetector = GestureDetectorCompat(app, doubleTapDetector)
+  }
+
+  private fun startSearchActivity(): Boolean {
+    val hostActivity = activity ?: return false
+    if (!isRecyclerViewIdle()) {
+      photoListRecyclerView.stopScroll()
+    }
+    val activityIntent = SearchActivity.newIntent(hostActivity)
+    startActivityForResult(activityIntent, REQUEST_CODE_SEARCH_ACTIVITY)
+    return true
+  }
+
+  private fun isRecyclerViewIdle(): Boolean {
+    return photoListRecyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE
   }
 }

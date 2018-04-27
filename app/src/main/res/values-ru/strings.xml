@@ -3,13 +3,14 @@
   <string name="app_name">FlickrViewer</string>
 
   <string name="title_recent_photos">Недавние</string>
+  <string name="title_search">Поиск</string>
 
   <!--Menu items titles-->
   <string name="menu_title_search">Поиск</string>
   <string name="menu_title_share">Поделиться</string>
 
   <!--Hints-->
-  <string name="hint_search_photos">Поиск фотографий</string>
+  <string name="hint_search_photos">Введите запрос</string>
 
   <!--Errors-->
   <string name="error_general">Ошибка</string>
@@ -17,6 +18,7 @@
   <string name="error_no_connection">Нет соединения с сетью</string>
   <string name="error_no_results">Нет данных для отображения</string>
   <string name="error_when_sharing_image">Возникла ошибка во время передачи изображения</string>
+  <string name="error_short_query">Запрос должен содержать как минимум 3 буквы</string>
 
   <!--Titles-->
   <string name="title_retry">Повторить</string>

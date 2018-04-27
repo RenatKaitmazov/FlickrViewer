@@ -3,12 +3,10 @@ package lz.renatkaitmazov.flickrviewer.base
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import dagger.android.support.AndroidSupportInjection
 import lz.renatkaitmazov.flickrviewer.FlickViewerApp
 import javax.inject.Inject

@@ -5,7 +5,7 @@ package lz.renatkaitmazov.flickrviewer.base
  *
  * @author Renat Kaitmazov
  */
-interface Presenter<View : LoadingView> {
+interface Presenter<View : BaseView> {
   /**
    * Releases a reference to an object of type [View].
    * Perform clean up here.

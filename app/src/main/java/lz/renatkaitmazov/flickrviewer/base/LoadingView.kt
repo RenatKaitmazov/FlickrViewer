@@ -7,7 +7,7 @@ package lz.renatkaitmazov.flickrviewer.base
  *
  * @author Renat Kaitmazov
  */
-interface LoadingView {
+interface LoadingView : BaseView {
   /**
    * Shows progress while its content is being retrieved.
    */
@@ -16,5 +16,5 @@ interface LoadingView {
   /**
    * Hides progress after its content has been downloaded.
    */
-  fun hideProgress();
+  fun hideProgress()
 }

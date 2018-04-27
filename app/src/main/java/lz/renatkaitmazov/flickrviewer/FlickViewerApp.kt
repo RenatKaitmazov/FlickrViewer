@@ -2,7 +2,6 @@ package lz.renatkaitmazov.flickrviewer
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import dagger.android.AndroidInjector
@@ -21,7 +20,6 @@ class FlickViewerApp
   : Application(),
   HasActivityInjector {
 
-  @Suppress("MemberVisibilityCanBePrivate")
   @Inject
   lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 

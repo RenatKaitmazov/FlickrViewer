@@ -1,7 +1,7 @@
 package lz.renatkaitmazov.flickrviewer.photolist
 
-import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
@@ -256,9 +256,19 @@ class PhotoListFragment
   /* PhotoListThumbnailViewHolder.OnThumbnailClickListener implementation   */
   /*------------------------------------------------------------------------*/
 
-  override fun onThumbnailClicked(item: PhotoListThumbnailItem) {
+  override fun onThumbnailClicked(item: PhotoListThumbnailItem,
+                                  sharedView: View) {
     val activityIntent = PhotoDetailActivity.newIntent(app, item.mediumSizeImageUrl)
-    startActivity(activityIntent)
+    if (supportsMaterialDesign()) {
+      val sharedElementTransition = ActivityOptionsCompat.makeSceneTransitionAnimation(
+        activity!!,
+        sharedView,
+        sharedView.transitionName
+      )
+      startActivity(activityIntent, sharedElementTransition.toBundle())
+    } else {
+      startActivity(activityIntent)
+    }
   }
 
   /*------------------------------------------------------------------------*/

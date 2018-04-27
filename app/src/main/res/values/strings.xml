@@ -1,7 +1,8 @@
 <resources>
   <string name="app_name">FlickrViewer</string>
-  <string name="authority_img_provider">lz.renatkaitmazov.flickrviewer.fileprovider</string>
-  <string name="cache_subdirectory_name">images</string>
+  <string name="authority_img_provider" translatable="false">lz.renatkaitmazov.flickrviewer.fileprovider</string>
+  <string name="cache_subdirectory_name" translatable="false">images</string>
+  <string name="transition_name_photo" translatable="false">transition_photo</string>
 
   <string name="title_recent_photos">Recent</string>
 

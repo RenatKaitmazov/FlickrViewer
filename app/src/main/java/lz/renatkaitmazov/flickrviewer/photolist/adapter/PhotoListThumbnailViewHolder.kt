@@ -26,8 +26,9 @@ class PhotoListThumbnailViewHolder(
      * A callback method which is triggered when the user clicks this view holder.
      *
      * @param item a data item this view holder is associated with.
+     * @param sharedView a view that is used when performing the shared element transition.
      */
-    fun onThumbnailClicked(item: PhotoListThumbnailItem)
+    fun onThumbnailClicked(item: PhotoListThumbnailItem, sharedView: View)
   }
 
   companion object {
@@ -82,6 +83,6 @@ class PhotoListThumbnailViewHolder(
   }
 
   override fun onClick(v: View?) {
-    thumbnailClickListener?.onThumbnailClicked(item)
+    thumbnailClickListener?.onThumbnailClicked(item, thumbnailImageView)
   }
 }

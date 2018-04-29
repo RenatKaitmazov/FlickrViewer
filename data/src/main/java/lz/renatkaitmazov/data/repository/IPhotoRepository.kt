@@ -43,5 +43,16 @@ interface IPhotoRepository {
    */
   fun createImageFileInCache(imageUrl: String, subDirectoryName: String): Single<File>
 
+  /**
+   * Searches for photos by the given query.
+   *
+   * @param query a search query.
+   * @return a list of photos if search was successful, and empty list otherwise.
+   */
   fun search(query: String): Single<List<PhotoEntity>>
+
+  /**
+   * Returns a list of photos found be the given query [query] at the given page [page].
+   */
+  fun searchNextPage(query: String, page: Int): Single<List<PhotoEntity>>
 }

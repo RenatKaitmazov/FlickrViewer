@@ -97,53 +97,53 @@ class PhotoRestRepository(
         return@create
       }
       loadRecentPhotos(page)
-        .subscribe({
+        .subscribe({ photos ->
           // If the user wants to receive the next page it is assumed that the first page is already
           // obtained and stored in the cache.
           val cachedList = cache.get(KEY_PHOTO_REST_REPOSITORY)
-          cachedList?.addAll(it)
+          cachedList?.addAll(photos)
           if (!emitter.isDisposed) {
-            emitter.onSuccess(it)
+            emitter.onSuccess(photos)
           }
         }, { error -> handleError(emitter, error) })
     }
   }
 
-  override fun search(query: String): Single<List<PhotoEntity>> {
+  override fun searchFirstPage(query: String): Single<List<PhotoEntity>> {
     return Single.create { emitter ->
       if (emitter.isDisposed) {
         return@create
       }
+      search(query, 1)
+        .subscribe({ photos ->
+          // Whenever the user's search completes successfully, the cache should be filled
+          // with new data.
+          invalidateCache()
+          cache.put(KEY_PHOTO_REST_REPOSITORY, photos as MutableList<PhotoEntity>)
+          if (!emitter.isDisposed) {
+            emitter.onSuccess(photos)
+          }
+        }, { error ->
+          handleError(emitter, error)
+        })
+    }
+  }
 
-      try {
-        if (!connectivityChecker.hasInternetConnection()) {
-          throw NoInternetConnectionException(MSG_EXCEPTION_NO_CONNECTION)
-        }
-        photoRestApi.search(METHOD_SEARCH, API_KEY, 1, EXTRAS, query)
-          .toFlowable()
-          .flatMapIterable { it.photosMetaData.photoList }
-          .filter { it.thumbnailImageUrl != null }
-          .filter { it.thumbnailImageUrl!!.isNotBlank() }
-          .filter { it.mediumSizeImageUrl != null }
-          .filter { it.mediumSizeImageUrl!!.isNotBlank() }
-          .filter { it.originalImageUrl != null }
-          .filter { it.originalImageUrl!!.isNotBlank() }
-          .toList()
-          .map(mapper::map)
-          .subscribe({ photos ->
-            // Whenever the user search completes successfully, the cache should be filled
-            // with new data.
-            invalidateCache()
-            cache.put(KEY_PHOTO_REST_REPOSITORY, photos as MutableList<PhotoEntity>)
-            if (!emitter.isDisposed) {
-              emitter.onSuccess(photos)
-            }
-          }, { error ->
-            handleError(emitter, error)
-          })
-      } catch (error: Throwable) {
-        handleError(emitter, error)
+  override fun searchNextPage(query: String, page: Int): Single<List<PhotoEntity>> {
+    return Single.create { emitter ->
+      if (emitter.isDisposed) {
+        return@create
       }
+      search(query, page)
+        .subscribe({ photos ->
+          val cachedList = cache.get(KEY_PHOTO_REST_REPOSITORY)
+          cachedList?.addAll(photos)
+          if (!emitter.isDisposed) {
+            emitter.onSuccess(photos)
+          }
+        }, { error ->
+          handleError(emitter, error)
+        })
     }
   }
 
@@ -162,6 +162,23 @@ class PhotoRestRepository(
     }
     // Connect to the server to fetch photos.
     return photoRestApi.getRecentPhotos(METHOD_RECENT, API_KEY, page, EXTRAS)
+      .toFlowable()
+      .flatMapIterable { it.photosMetaData.photoList }
+      .filter { it.thumbnailImageUrl != null }
+      .filter { it.thumbnailImageUrl!!.isNotBlank() }
+      .filter { it.mediumSizeImageUrl != null }
+      .filter { it.mediumSizeImageUrl!!.isNotBlank() }
+      .filter { it.originalImageUrl != null }
+      .filter { it.originalImageUrl!!.isNotBlank() }
+      .toList()
+      .map(mapper::map)
+  }
+
+  private fun search(query: String, page: Int): Single<List<PhotoEntity>> {
+    if (!connectivityChecker.hasInternetConnection()) {
+      throw NoInternetConnectionException(MSG_EXCEPTION_NO_CONNECTION)
+    }
+    return photoRestApi.search(METHOD_SEARCH, API_KEY, page, EXTRAS, query)
       .toFlowable()
       .flatMapIterable { it.photosMetaData.photoList }
       .filter { it.thumbnailImageUrl != null }

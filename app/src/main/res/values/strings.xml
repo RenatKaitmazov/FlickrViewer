@@ -6,6 +6,7 @@
 
   <string name="title_recent_photos">Recent</string>
   <string name="title_search">Search</string>
+  <string name="title_search_with_query">Search: %1$s</string>
 
   <!--Menu items titles-->
   <string name="menu_title_search">Search</string>

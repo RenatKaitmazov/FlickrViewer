@@ -21,6 +21,11 @@ interface PhotoListFragmentView : LoadingView {
   fun resetState()
 
   /**
+   * Restores the default Flickr API method which is the method for getting recent photos.
+   */
+  fun restoreDefaultMethod()
+
+  /**
    * Adds an item into a list of thumbnails that shows some progress of loading.
    */
   fun addLoadingItem()
@@ -66,4 +71,15 @@ interface PhotoListFragmentView : LoadingView {
    * Scrolls the list of thumbnails to the very first item.
    */
   fun scrollToFirstItem()
+
+  /**
+   * Sets toolbar's title in the format "Search: [query]".
+   * Should only be set after a successful searchFirstPage.
+   */
+  fun setSearchTitle(query: String)
+
+  /**
+   * Sets toolbar title "Recent"
+   */
+  fun setRecentTitle()
 }

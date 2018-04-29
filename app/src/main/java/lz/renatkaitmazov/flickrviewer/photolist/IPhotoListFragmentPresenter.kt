@@ -24,7 +24,8 @@ interface IPhotoListFragmentPresenter : Presenter<PhotoListFragmentView> {
    * Gets a list of photos at the specified page.
    * The list does not contain actual photos. It contains URLs to photos.
    *
-   * @param page
+   * @param page a page at which needed photos are located.
+   * @param forMethod Flickr API method.
    */
   fun getNextPage(page: Int)
 
@@ -36,7 +37,12 @@ interface IPhotoListFragmentPresenter : Presenter<PhotoListFragmentView> {
   /**
    * Searches for photos by the given query.
    *
-   * @param query a search query
+   * @param query a searchFirstPage query
    */
   fun search(query: String)
+
+  /**
+   * Returns a list of photos found be the given query [query] at the given page [page].
+   */
+  fun searchNextPage(query: String, page: Int)
 }

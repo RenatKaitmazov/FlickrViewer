@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
- * Defines endpoints to get, search, and if possible download
+ * Defines endpoints to get, searchFirstPage, and if possible download
  * images from the server.
  *
  * @author Renat Kaitmazov
@@ -52,7 +52,7 @@ interface PhotoRestApi {
     const val QUERY_KEY_EXTRAS = "extras"
 
     /**
-     * A free text search.
+     * A free text searchFirstPage.
      * Photos who's title, description or tags contain the text will be returned.
      */
     const val QUERY_KEY_SEARCH_QUERY = "text"
@@ -64,7 +64,7 @@ interface PhotoRestApi {
     const val QUERY_KEY_SAFE_SEARCH = "safe_search"
 
     /**
-     * Allows to specify what type of images to search for (photos, screenshots, etc).
+     * Allows to specify what type of images to searchFirstPage for (photos, screenshots, etc).
      * The value of 1 is used for photos only.
      */
     const val QUERY_KEY_CONTENT_TYPE = "content_type"

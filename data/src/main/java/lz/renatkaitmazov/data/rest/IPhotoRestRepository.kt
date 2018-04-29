@@ -29,5 +29,10 @@ interface IPhotoRestRepository {
   /**
    * Returns photos found by the given query.
    */
-  fun search(query: String): Single<List<PhotoEntity>>
+  fun searchFirstPage(query: String): Single<List<PhotoEntity>>
+
+  /**
+   * Returns a list of photos found be the given query [query] at the given page [page].
+   */
+  fun searchNextPage(query: String, page: Int): Single<List<PhotoEntity>>
 }

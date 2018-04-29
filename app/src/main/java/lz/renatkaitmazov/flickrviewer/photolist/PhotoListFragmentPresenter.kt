@@ -1,5 +1,6 @@
 package lz.renatkaitmazov.flickrviewer.photolist
 
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -46,15 +47,58 @@ class PhotoListFragmentPresenter(
     val updateDisposable = repository.updatePhotoList()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe { view?.resetState() }
+      .doOnSubscribe {
+        ifViewNotNull {
+          it.resetState()
+          it.restoreDefaultMethod()
+        }
+      }
       .doFinally { view?.hideProgress() }
       .map(mapper::map)
-      .subscribe(this::handleFirstPageSuccess, this::handleFirstPageError)
+      .subscribe({ response ->
+        view?.setRecentTitle()
+        handleFirstPageSuccess(response)
+      }, this::handleFirstPageError)
     subscriptionManager.add(updateDisposable)
   }
 
   override fun getNextPage(page: Int) {
-    val nextPageDisposable = repository.getNextPage(page)
+    getNextPage(repository.getNextPage(page))
+  }
+
+  override fun onToolbarDoubleTap() {
+    view?.scrollToFirstItem()
+  }
+
+  override fun search(query: String) {
+    val searchDisposable = repository.search(query)
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe {
+        ifViewNotNull {
+          it.resetState()
+          it.showProgress()
+        }
+      }
+      .doFinally { view?.hideProgress() }
+      .map(mapper::map)
+      .subscribe({ response ->
+        view?.setSearchTitle(query)
+        handleFirstPageSuccess(response)
+      }, this::handleFirstPageError)
+    subscriptionManager.add(searchDisposable)
+  }
+
+  override fun searchNextPage(query: String, page: Int) {
+    getNextPage(repository.searchNextPage(query, page))
+  }
+
+  /*------------------------------------------------------------------------*/
+  /* Helper Methods                                                         */
+  /*------------------------------------------------------------------------*/
+
+  private fun getNextPage(nextPageDataSource: Single<List<PhotoEntity>>) {
+    val nextPageDisposable = nextPageDataSource
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .doOnSubscribe { view?.addLoadingItem() }
@@ -77,30 +121,6 @@ class PhotoListFragmentPresenter(
       })
     subscriptionManager.add(nextPageDisposable)
   }
-
-  override fun onToolbarDoubleTap() {
-    view?.scrollToFirstItem()
-  }
-
-  override fun search(query: String) {
-    val searchDisposable = repository.search(query)
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnSubscribe {
-        ifViewNotNull {
-          it.resetState()
-          it.showProgress()
-        }
-      }
-      .doFinally { view?.hideProgress() }
-      .map(mapper::map)
-      .subscribe(this::handleFirstPageSuccess, this::handleFirstPageError)
-    subscriptionManager.add(searchDisposable)
-  }
-
-  /*------------------------------------------------------------------------*/
-  /* Helper Methods                                                         */
-  /*------------------------------------------------------------------------*/
 
   private fun handleFirstPageSuccess(response: List<PhotoListAdapterItem>) {
     ifViewNotNull {

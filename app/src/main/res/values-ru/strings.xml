@@ -4,6 +4,7 @@
 
   <string name="title_recent_photos">Недавние</string>
   <string name="title_search">Поиск</string>
+  <string name="title_search_with_query">Поиск: %1$s</string>
 
   <!--Menu items titles-->
   <string name="menu_title_search">Поиск</string>

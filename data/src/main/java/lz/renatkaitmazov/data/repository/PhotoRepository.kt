@@ -70,7 +70,11 @@ class PhotoRepository(
   }
 
   override fun search(query: String): Single<List<PhotoEntity>> {
-    return restRepository.search(query)
+    return restRepository.searchFirstPage(query)
+  }
+
+  override fun searchNextPage(query: String, page: Int): Single<List<PhotoEntity>> {
+    return restRepository.searchNextPage(query, page)
   }
 
   /*------------------------------------------------------------------------*/

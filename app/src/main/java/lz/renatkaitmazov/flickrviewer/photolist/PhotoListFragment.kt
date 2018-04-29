@@ -15,6 +15,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_photo_list.*
+import lz.renatkaitmazov.data.rest.METHOD_RECENT
+import lz.renatkaitmazov.data.rest.METHOD_SEARCH
 import lz.renatkaitmazov.flickrviewer.R
 import lz.renatkaitmazov.flickrviewer.base.BaseFragment
 import lz.renatkaitmazov.flickrviewer.base.listener.DoubleTapDetector
@@ -68,6 +70,16 @@ class PhotoListFragment
      */
     private const val KEY_BUNDLE_LAYOUT_STATE = "KEY_BUNDLE_LAYOUT_STATE"
 
+    /**
+     * A key for [flickrPhotoMethod].
+     */
+    private const val KEY_BUNDLE_FLICKR_METHOD = "KEY_BUNDLE_FLICKR_METHOD"
+
+    /**
+     * A key for [lastSearchQuery].
+     */
+    private const val KEY_BUNDLE_LAST_QUERY = "KEY_BUNDLE_LAST_QUERY"
+
     private const val REQUEST_CODE_SEARCH_ACTIVITY = 1_000
 
     /**
@@ -85,6 +97,17 @@ class PhotoListFragment
    * A flag used for pagination to determine if the server has more data to return.
    */
   private var serverHasMoreData = true
+
+  /**
+   * A method that defines what kind of photos to return (recent, searchFirstPage, etc).
+   */
+  private var flickrPhotoMethod = METHOD_RECENT
+
+  /**
+   * Keeps track of the last searchFirstPage query.
+   */
+  private var lastSearchQuery = ""
+
   private lateinit var photoListAdapter: PhotoListAdapter
   private lateinit var gestureDetector: GestureDetectorCompat
   private val paginator = InfiniteBottomScroll(this)
@@ -100,11 +123,14 @@ class PhotoListFragment
     super.onCreate(savedInstanceState)
     setHasOptionsMenu(true)
     photoListAdapter = PhotoListAdapter(app, this)
+    if (savedInstanceState != null) {
+      flickrPhotoMethod = savedInstanceState.getString(KEY_BUNDLE_FLICKR_METHOD, METHOD_RECENT)
+    }
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     initGestureDetector()
-    initToolbar()
+    initToolbar(savedInstanceState)
     initRefreshLayout()
     initRecyclerView(savedInstanceState)
     initNoConnectionErrorView()
@@ -117,14 +143,17 @@ class PhotoListFragment
     outState.putBoolean(KEY_BUNDLE_HAS_MORE_DATA, serverHasMoreData)
     val layoutState = photoListRecyclerView.layoutManager.onSaveInstanceState()
     outState.putParcelable(KEY_BUNDLE_LAYOUT_STATE, layoutState)
+    outState.putString(KEY_BUNDLE_FLICKR_METHOD, flickrPhotoMethod)
+    outState.putString(KEY_BUNDLE_LAST_QUERY, lastSearchQuery)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     when (requestCode) {
       REQUEST_CODE_SEARCH_ACTIVITY -> {
         if (resultCode == RESULT_OK && data != null) {
-          val query = data.getStringExtra(Intent.EXTRA_TEXT)
-          presenter.search(query)
+          flickrPhotoMethod = METHOD_SEARCH
+          lastSearchQuery = data.getStringExtra(Intent.EXTRA_TEXT)
+          presenter.search(lastSearchQuery)
         }
       }
     }
@@ -221,6 +250,11 @@ class PhotoListFragment
     serverHasMoreData = true
   }
 
+  override fun restoreDefaultMethod() {
+    flickrPhotoMethod = METHOD_RECENT
+    lastSearchQuery = ""
+  }
+
   override fun scrollToFirstItem() {
     val gridLayoutManager = photoListRecyclerView.layoutManager as GridLayoutManager
     // Determine how many items fit into the screen.
@@ -236,6 +270,16 @@ class PhotoListFragment
     val firstItemPosition = 0
     // And then start smooth scroll to the very first item.
     photoListRecyclerView.smoothScrollToPosition(firstItemPosition)
+  }
+
+  override fun setSearchTitle(query: String) {
+    val title = getString(R.string.title_search_with_query, query)
+    toolbar.title = title
+  }
+
+  override fun setRecentTitle() {
+    val title = getString(R.string.title_recent_photos)
+    toolbar.title = title
   }
 
   /*------------------------------------------------------------------------*/
@@ -260,7 +304,12 @@ class PhotoListFragment
   }
 
   override fun loadMode() {
-    presenter.getNextPage(++currentPage)
+    ++currentPage
+    when (flickrPhotoMethod) {
+      METHOD_RECENT -> presenter.getNextPage(currentPage)
+      METHOD_SEARCH -> presenter.searchNextPage(lastSearchQuery, currentPage)
+      else -> throw IllegalArgumentException("Unknown method")
+    }
   }
 
   /*------------------------------------------------------------------------*/
@@ -300,11 +349,18 @@ class PhotoListFragment
   /* Helper Methods                                                         */
   /*------------------------------------------------------------------------*/
 
-  private fun initToolbar() {
+  private fun initToolbar(savedInstanceState: Bundle?) {
     toolbar.setOnTouchListener(View.OnTouchListener { _, event ->
       return@OnTouchListener gestureDetector.onTouchEvent(event)
     })
-    toolbar.setTitle(R.string.title_recent_photos)
+    var title = getString(R.string.title_recent_photos)
+    if (savedInstanceState != null) {
+      val searchQuery = savedInstanceState.getString(KEY_BUNDLE_LAST_QUERY, "")
+      if (searchQuery.isNotBlank()) {
+        title = getString(R.string.title_search_with_query, searchQuery)
+      }
+    }
+    toolbar.title = title
     val hostActivity = activity as? AppCompatActivity
     hostActivity?.setSupportActionBar(toolbar)
     if (supportsMaterialDesign()) {

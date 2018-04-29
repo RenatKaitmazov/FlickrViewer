@@ -8,12 +8,12 @@ import lz.renatkaitmazov.flickrviewer.base.BaseView
  */
 interface SearchFragmentView : BaseView {
   /**
-   * Shows an error that a search query is too short.
+   * Shows an error that a searchFirstPage query is too short.
    */
   fun showInvalidQueryLength()
 
   /**
-   * The search query is validated and it is correct.
+   * The searchFirstPage query is validated and it is correct.
    */
   fun onQueryValidated(query: String)
 }

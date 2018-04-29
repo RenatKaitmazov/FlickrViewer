@@ -124,8 +124,7 @@ class PhotoListFragment
       REQUEST_CODE_SEARCH_ACTIVITY -> {
         if (resultCode == RESULT_OK && data != null) {
           val query = data.getStringExtra(Intent.EXTRA_TEXT)
-          // TODO Start searching
-          showLongToast(query)
+          presenter.search(query)
         }
       }
     }

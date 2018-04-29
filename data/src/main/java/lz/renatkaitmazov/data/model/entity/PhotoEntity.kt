@@ -4,7 +4,7 @@ package lz.renatkaitmazov.data.model.entity
  *
  * @author Renat Kaitmazov
  */
-data class RecentPhotoEntity(
+data class PhotoEntity(
   val id: String,
   val title: String,
   val isPublic: Int,

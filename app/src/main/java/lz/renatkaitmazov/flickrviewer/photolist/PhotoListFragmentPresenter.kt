@@ -5,7 +5,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import lz.renatkaitmazov.data.NAMED_FRG_COMPOSITE_DISPOSABLE
 import lz.renatkaitmazov.data.NAMED_FRG_PHOTO_LIST_ADAPTER_ITEM
-import lz.renatkaitmazov.data.model.entity.RecentPhotoEntity
+import lz.renatkaitmazov.data.model.entity.PhotoEntity
 import lz.renatkaitmazov.data.model.mapper.Mapper
 import lz.renatkaitmazov.data.repository.IPhotoRepository
 import lz.renatkaitmazov.flickrviewer.base.BasePresenter
@@ -23,7 +23,7 @@ class PhotoListFragmentPresenter(
   subscriptionManager: CompositeDisposable,
   private val repository: IPhotoRepository,
   @Named(NAMED_FRG_PHOTO_LIST_ADAPTER_ITEM)
-  private val mapper: @JvmSuppressWildcards Mapper<List<RecentPhotoEntity>, List<PhotoListAdapterItem>>
+  private val mapper: @JvmSuppressWildcards Mapper<List<PhotoEntity>, List<PhotoListAdapterItem>>
 ) : BasePresenter<PhotoListFragmentView>(view, subscriptionManager),
   IPhotoListFragmentPresenter {
 
@@ -82,17 +82,33 @@ class PhotoListFragmentPresenter(
     view?.scrollToFirstItem()
   }
 
+  override fun search(query: String) {
+    val searchDisposable = repository.search(query)
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .doOnSubscribe {
+        ifViewNotNull {
+          it.resetState()
+          it.showProgress()
+        }
+      }
+      .doFinally { view?.hideProgress() }
+      .map(mapper::map)
+      .subscribe(this::handleFirstPageSuccess, this::handleFirstPageError)
+    subscriptionManager.add(searchDisposable)
+  }
+
   /*------------------------------------------------------------------------*/
   /* Helper Methods                                                         */
   /*------------------------------------------------------------------------*/
 
   private fun handleFirstPageSuccess(response: List<PhotoListAdapterItem>) {
     ifViewNotNull {
+      it.hideAnyVisibleError()
       if (response.isEmpty()) {
         it.onFirstPageEmptyResponseError()
         return@ifViewNotNull
       }
-      it.hideAnyVisibleError()
       it.showThumbnails(response)
     }
   }

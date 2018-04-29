@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import lz.renatkaitmazov.data.cache.Cache;
-import lz.renatkaitmazov.data.cache.RecentPhotoCache;
+import lz.renatkaitmazov.data.cache.PhotoCache;
 import lz.renatkaitmazov.flickrviewer.BuildConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -52,6 +52,6 @@ public final class NetworkModule {
   @Singleton
   @Provides
   static Cache provideRecentPhotoEntityCache() {
-    return new RecentPhotoCache();
+    return new PhotoCache();
   }
 }

@@ -1,4 +1,4 @@
-package lz.renatkaitmazov.data.model.recentphoto
+package lz.renatkaitmazov.data.model.photo
 
 import com.google.gson.annotations.SerializedName
 
@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
  *
  * @author Renat Kaitmazov
  */
-data class RecentPhotosMetaDataResponse(
+data class PhotosMetaDataResponse(
   @SerializedName("page")
   val currentPage: Int,
   @SerializedName("pages")
@@ -18,5 +18,5 @@ data class RecentPhotosMetaDataResponse(
   @SerializedName("total")
   val numberOfPhotos: Int,
   @SerializedName("photo")
-  val photoList: List<RecentPhotoResponse>
+  val photoList: List<PhotoResponse>
 )

@@ -8,7 +8,7 @@ import com.bumptech.glide.request.transition.Transition
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import io.reactivex.schedulers.Schedulers
-import lz.renatkaitmazov.data.model.entity.RecentPhotoEntity
+import lz.renatkaitmazov.data.model.entity.PhotoEntity
 import lz.renatkaitmazov.data.rest.IPhotoRestRepository
 import java.io.File
 import java.io.FileOutputStream
@@ -39,15 +39,19 @@ class PhotoRepository(
     private const val IMG_COMPRESSION_QUALITY = 100
   }
 
-  override fun getPhotoListAtFirstPage(): Single<List<RecentPhotoEntity>> {
+  /*------------------------------------------------------------------------*/
+  /* IPhotoRepository implementation                                        */
+  /*------------------------------------------------------------------------*/
+
+  override fun getPhotoListAtFirstPage(): Single<List<PhotoEntity>> {
     return restRepository.getRecentPhotosAtFirstPage()
   }
 
-  override fun updatePhotoList(): Single<List<RecentPhotoEntity>> {
+  override fun updatePhotoList(): Single<List<PhotoEntity>> {
     return restRepository.updatePhotoList()
   }
 
-  override fun getNextPage(page: Int): Single<List<RecentPhotoEntity>> {
+  override fun getNextPage(page: Int): Single<List<PhotoEntity>> {
     return restRepository.getNextPage(page)
   }
 
@@ -64,6 +68,14 @@ class PhotoRepository(
         .subscribe(emitter::onSuccess, {error -> handleError(emitter, error)})
     }
   }
+
+  override fun search(query: String): Single<List<PhotoEntity>> {
+    return restRepository.search(query)
+  }
+
+  /*------------------------------------------------------------------------*/
+  /* Helper Methods                                                         */
+  /*------------------------------------------------------------------------*/
 
   private fun getImage(url: String): Single<Bitmap> {
     return Single.create { emitter ->

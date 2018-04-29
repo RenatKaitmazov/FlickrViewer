@@ -1,7 +1,7 @@
 package lz.renatkaitmazov.data.repository
 
 import io.reactivex.Single
-import lz.renatkaitmazov.data.model.entity.RecentPhotoEntity
+import lz.renatkaitmazov.data.model.entity.PhotoEntity
 import java.io.File
 
 /**
@@ -17,14 +17,14 @@ interface IPhotoRepository {
    *
    * @return a list of recent photos.
    */
-  fun getPhotoListAtFirstPage(): Single<List<RecentPhotoEntity>>
+  fun getPhotoListAtFirstPage(): Single<List<PhotoEntity>>
 
   /**
    * Invalidates the cache and fetches the most recent photos.
    *
    * @return list of updates photos.
    */
-  fun updatePhotoList(): Single<List<RecentPhotoEntity>>
+  fun updatePhotoList(): Single<List<PhotoEntity>>
 
   /**
    * Returns a list of photos on the given [page].
@@ -32,7 +32,7 @@ interface IPhotoRepository {
    * @param page the number of page from which photos should be extracted.
    * @return a list of photos.
    */
-  fun getNextPage(page: Int): Single<List<RecentPhotoEntity>>
+  fun getNextPage(page: Int): Single<List<PhotoEntity>>
 
   /**
    * Creates a temporary image file in the device's cache so that the image can be shared.
@@ -42,4 +42,6 @@ interface IPhotoRepository {
    * @return a file that wraps an image.
    */
   fun createImageFileInCache(imageUrl: String, subDirectoryName: String): Single<File>
+
+  fun search(query: String): Single<List<PhotoEntity>>
 }

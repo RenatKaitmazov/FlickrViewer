@@ -5,9 +5,9 @@ import io.reactivex.SingleEmitter
 import lz.renatkaitmazov.data.cache.Cache
 import lz.renatkaitmazov.data.device.IConnectivityChecker
 import lz.renatkaitmazov.data.exception.NoInternetConnectionException
-import lz.renatkaitmazov.data.model.entity.RecentPhotoEntity
+import lz.renatkaitmazov.data.model.entity.PhotoEntity
 import lz.renatkaitmazov.data.model.mapper.Mapper
-import lz.renatkaitmazov.data.model.recentphoto.RecentPhotoResponse
+import lz.renatkaitmazov.data.model.photo.PhotoResponse
 import retrofit2.Retrofit
 
 /**
@@ -17,8 +17,8 @@ import retrofit2.Retrofit
 class PhotoRestRepository(
   retrofit: Retrofit,
   private val connectivityChecker: IConnectivityChecker,
-  private val cache: @JvmSuppressWildcards Cache<MutableList<RecentPhotoEntity>>,
-  private val mapper: @JvmSuppressWildcards Mapper<List<RecentPhotoResponse>, List<RecentPhotoEntity>>
+  private val cache: @JvmSuppressWildcards Cache<MutableList<PhotoEntity>>,
+  private val mapper: @JvmSuppressWildcards Mapper<List<PhotoResponse>, List<PhotoEntity>>
 ) : IPhotoRestRepository {
 
   companion object {
@@ -26,10 +26,6 @@ class PhotoRestRepository(
      * Used as a key to store the server response in the [cache].
      */
     private const val KEY_PHOTO_REST_REPOSITORY = "PhotoRestRepository"
-    private const val METHOD_RECENT = "flickr.photos.getRecent"
-    private const val PHOTOS_PER_PAGE = 100
-    private const val FORMAT_JSON = "json"
-    private const val NO_JSON_CALLBACK = 1
     /**
      * url_s is for a thumbnail.
      * url_c is for a medium size image.
@@ -45,7 +41,7 @@ class PhotoRestRepository(
   /* IPhotoRestRepository implementation                                    */
   /*------------------------------------------------------------------------*/
 
-  override fun getRecentPhotosAtFirstPage(): Single<List<RecentPhotoEntity>> {
+  override fun getRecentPhotosAtFirstPage(): Single<List<PhotoEntity>> {
     return Single.create { emitter ->
       if (emitter.isDisposed) {
         return@create
@@ -61,7 +57,7 @@ class PhotoRestRepository(
         }
         loadRecentPhotos(1)
           .subscribe({
-            cache.put(KEY_PHOTO_REST_REPOSITORY, it as MutableList<RecentPhotoEntity>)
+            cache.put(KEY_PHOTO_REST_REPOSITORY, it as MutableList<PhotoEntity>)
             if (!emitter.isDisposed) {
               emitter.onSuccess(it)
             }
@@ -72,7 +68,7 @@ class PhotoRestRepository(
     }
   }
 
-  override fun updatePhotoList(): Single<List<RecentPhotoEntity>> {
+  override fun updatePhotoList(): Single<List<PhotoEntity>> {
     return Single.create { emitter ->
       if (emitter.isDisposed) {
         return@create
@@ -82,7 +78,7 @@ class PhotoRestRepository(
           .subscribe({
             // Invalidate the cache only if the server responded successfully.
             invalidateCache()
-            cache.put(KEY_PHOTO_REST_REPOSITORY, it as MutableList<RecentPhotoEntity>)
+            cache.put(KEY_PHOTO_REST_REPOSITORY, it as MutableList<PhotoEntity>)
             if (!emitter.isDisposed) {
               emitter.onSuccess(it)
             }
@@ -95,7 +91,7 @@ class PhotoRestRepository(
     }
   }
 
-  override fun getNextPage(page: Int): Single<List<RecentPhotoEntity>> {
+  override fun getNextPage(page: Int): Single<List<PhotoEntity>> {
     return Single.create { emitter ->
       if (emitter.isDisposed) {
         return@create
@@ -113,6 +109,44 @@ class PhotoRestRepository(
     }
   }
 
+  override fun search(query: String): Single<List<PhotoEntity>> {
+    return Single.create { emitter ->
+      if (emitter.isDisposed) {
+        return@create
+      }
+
+      try {
+        if (!connectivityChecker.hasInternetConnection()) {
+          throw NoInternetConnectionException(MSG_EXCEPTION_NO_CONNECTION)
+        }
+        photoRestApi.search(METHOD_SEARCH, API_KEY, 1, EXTRAS, query)
+          .toFlowable()
+          .flatMapIterable { it.photosMetaData.photoList }
+          .filter { it.thumbnailImageUrl != null }
+          .filter { it.thumbnailImageUrl!!.isNotBlank() }
+          .filter { it.mediumSizeImageUrl != null }
+          .filter { it.mediumSizeImageUrl!!.isNotBlank() }
+          .filter { it.originalImageUrl != null }
+          .filter { it.originalImageUrl!!.isNotBlank() }
+          .toList()
+          .map(mapper::map)
+          .subscribe({ photos ->
+            // Whenever the user search completes successfully, the cache should be filled
+            // with new data.
+            invalidateCache()
+            cache.put(KEY_PHOTO_REST_REPOSITORY, photos as MutableList<PhotoEntity>)
+            if (!emitter.isDisposed) {
+              emitter.onSuccess(photos)
+            }
+          }, { error ->
+            handleError(emitter, error)
+          })
+      } catch (error: Throwable) {
+        handleError(emitter, error)
+      }
+    }
+  }
+
   /*------------------------------------------------------------------------*/
   /* Helper Methods                                                         */
   /*------------------------------------------------------------------------*/
@@ -121,19 +155,13 @@ class PhotoRestRepository(
     cache.remove(KEY_PHOTO_REST_REPOSITORY)
   }
 
-  private fun loadRecentPhotos(page: Int): Single<List<RecentPhotoEntity>> {
+  private fun loadRecentPhotos(page: Int): Single<List<PhotoEntity>> {
     // Check to see if the device is connected to the Internet.
     if (!connectivityChecker.hasInternetConnection()) {
       throw NoInternetConnectionException(MSG_EXCEPTION_NO_CONNECTION)
     }
-    val recent = METHOD_RECENT
-    val key = API_KEY
-    val perPage = PHOTOS_PER_PAGE
-    val json = FORMAT_JSON
-    val noCallback = NO_JSON_CALLBACK
-    val extras = EXTRAS
     // Connect to the server to fetch photos.
-    return photoRestApi.getRecentPhotos(recent, key, perPage, page, json, noCallback, extras)
+    return photoRestApi.getRecentPhotos(METHOD_RECENT, API_KEY, page, EXTRAS)
       .toFlowable()
       .flatMapIterable { it.photosMetaData.photoList }
       .filter { it.thumbnailImageUrl != null }

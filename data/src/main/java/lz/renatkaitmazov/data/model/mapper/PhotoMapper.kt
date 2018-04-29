@@ -1,20 +1,20 @@
 package lz.renatkaitmazov.data.model.mapper
 
-import lz.renatkaitmazov.data.model.entity.RecentPhotoEntity
-import lz.renatkaitmazov.data.model.recentphoto.RecentPhotoResponse
+import lz.renatkaitmazov.data.model.entity.PhotoEntity
+import lz.renatkaitmazov.data.model.photo.PhotoResponse
 
 /**
  *
  * @author Renat Kaitmazov
  */
-class RecentPhotoMapper : Mapper<List<RecentPhotoResponse>, List<RecentPhotoEntity>> {
+class PhotoMapper : Mapper<List<PhotoResponse>, List<PhotoEntity>> {
 
-  override fun map(source: List<RecentPhotoResponse>): List<RecentPhotoEntity> {
+  override fun map(source: List<PhotoResponse>): List<PhotoEntity> {
     val size = source.size
-    val entityList = ArrayList<RecentPhotoEntity>(size)
+    val entityList = ArrayList<PhotoEntity>(size)
     for (i in 0 until size) {
       val response = source[i]
-      val entity = RecentPhotoEntity(
+      val entity = PhotoEntity(
         response.id,
         response.title,
         response.isPublic,

@@ -32,4 +32,11 @@ interface IPhotoListFragmentPresenter : Presenter<PhotoListFragmentView> {
    * This method gets triggered when the user taps toolbar two times in a row.
    */
   fun onToolbarDoubleTap()
+
+  /**
+   * Searches for photos by the given query.
+   *
+   * @param query a search query
+   */
+  fun search(query: String)
 }

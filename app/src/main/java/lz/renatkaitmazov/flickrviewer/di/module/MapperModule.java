@@ -6,7 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 import lz.renatkaitmazov.data.DaggerConstantKt;
 import lz.renatkaitmazov.data.model.mapper.Mapper;
-import lz.renatkaitmazov.data.model.mapper.RecentPhotoMapper;
+import lz.renatkaitmazov.data.model.mapper.PhotoMapper;
 import lz.renatkaitmazov.flickrviewer.di.scope.FragmentScope;
 import lz.renatkaitmazov.flickrviewer.photolist.model.PhotoListAdapterItemMapper;
 
@@ -22,7 +22,7 @@ public final class MapperModule {
   @FragmentScope
   @Named(DaggerConstantKt.NAMED_FRG_RECENT_PHOTO_MAPPER)
   static Mapper provideRecentPhotoMapper() {
-    return new RecentPhotoMapper();
+    return new PhotoMapper();
   }
 
   @Provides

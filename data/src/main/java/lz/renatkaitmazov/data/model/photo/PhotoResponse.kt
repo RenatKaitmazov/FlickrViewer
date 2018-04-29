@@ -1,4 +1,4 @@
-package lz.renatkaitmazov.data.model.recentphoto
+package lz.renatkaitmazov.data.model.photo
 
 import com.google.gson.annotations.SerializedName
 
@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  *
  * @author Renat Kaitmazov
  */
-data class RecentPhotoResponse(
+data class PhotoResponse(
   val id: String,
   @SerializedName("owner")
   val ownerId: String,
@@ -27,7 +27,7 @@ data class RecentPhotoResponse(
 
   override fun equals(other: Any?): Boolean {
     if (other == this) return true
-    if (other == null || other !is RecentPhotoResponse) return false
+    if (other == null || other !is PhotoResponse) return false
     return this.id == other.id
   }
 

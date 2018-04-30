@@ -2,8 +2,11 @@ package lz.renatkaitmazov.flickrviewer.photodetail
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.v4.app.Fragment
+import lz.renatkaitmazov.flickrviewer.R
 import lz.renatkaitmazov.flickrviewer.base.BaseActivity
+import lz.renatkaitmazov.flickrviewer.base.supportsMaterialDesign
 
 /**
  *
@@ -33,6 +36,22 @@ class PhotoDetailActivity : BaseActivity() {
     fun newIntent(context: Context, photoUrl: String): Intent {
       return Intent(context, PhotoDetailActivity::class.java)
         .putExtra(KEY_EXTRA_PHOTO_URL, photoUrl)
+    }
+  }
+
+  /*------------------------------------------------------------------------*/
+  /* Activity Lifecycle Events                                              */
+  /*------------------------------------------------------------------------*/
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    if (supportsMaterialDesign()) {
+      // Exclude bottom navigation bar from shared element transition to avoid
+      // flickering while animating.
+      val transition = window.enterTransition
+      transition.excludeTarget(android.R.id.navigationBarBackground, true)
+      val duration = resources.getInteger(R.integer.anim_duration_very_short).toLong()
+      transition.duration = duration
     }
   }
 

@@ -56,7 +56,7 @@
     android:fillViewport="true"
     app:errorImageSrc="@drawable/img_no_results"
     app:errorTitleText="@string/error_no_results"
-    app:errorButtonText="@string/title_update"
+    app:errorButtonText="@string/title_recent_photos"
     android:background="@android:color/white"
     android:visibility="gone"/>
 

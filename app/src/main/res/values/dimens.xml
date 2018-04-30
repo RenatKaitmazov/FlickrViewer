@@ -7,6 +7,7 @@
   <!--Margin-->
   <dimen name="margin_tiny">8dp</dimen>
   <dimen name="margin_small">16dp</dimen>
+  <dimen name="margin_medium">32dp</dimen>
 
   <!--Padding-->
   <dimen name="padding_tiny">8dp</dimen>
